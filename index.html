@@ -27,15 +27,15 @@
     // var testhtml = "{{~ var aaa = \"aaa\"}}   {{~ for ( x of aaa)}}  {{aaa}}--{{x}}--{{end1}}--end  {{~for (var i=0;i< x.length;i++)}}  {{x[i]}} {{aaa}} {{bbb}} {{~end}} {{~end}} {{x}} {{aaa}} {{bbb}}";
     // var testhtml = "{{~if (a == b)}} xxx {{~end}}";
     // var testhtml = "{{~ var a = \"c\"}} {{~if (a == b)}} xxx {{~end}}";
-    var testhtml = "{{~ var a = \"c\",b=\"c\"}} {{~if (a == b)}} xxx    {{~end}}{{title}}{{content}}";
 
+    var testhtml = "{{~ var a = \"c\",b=\"c\"}} {{~if (a == b)}} xxx    {{~end}}{{title}}{{content}}";
     var data = {"title": "title test", "content": "content test..."};
+
     var fasty = new Fasty();
 
     let time1 = new Date().getTime();
-    for (var i = 0; i < 10000; i++) {
-        var render = fasty.render(testhtml, data);
-        // console.log(render)
+    for (var i = 0; i < 100000; i++) {
+        fasty.render(testhtml, data);
     }
     console.log("time1 >>>> " + (new Date().getTime() - time1))
     // time1 = new Date().getTime();

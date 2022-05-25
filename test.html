@@ -7,7 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>fasty</title>
 
-    <script src="fasty.js"></script>
+    <script src="./fasty.js"></script>
+    <script src="https://unpkg.com/art-template/lib/template-web.js"></script>
 
 </head>
 
@@ -34,20 +35,17 @@
 
     let time1 = new Date().getTime();
     for (var i = 0; i < 10000; i++) {
-        var render = fasty.render(testhtml, data);
+        fasty.render(testhtml, data);
         // console.log(render)
     }
     console.log("time1 >>>> " + (new Date().getTime() - time1))
-    // time1 = new Date().getTime();
-    //
-    // for (var i = 0; i < 10000; i++) {
-    //     var testhtml = "{{set a = \"c\"}} {{set b = \"c\"}} {{if a == b}} xxx    {{/if}}{{title}}{{content}}";
-    //     var render = template.render(testhtml, data);
-    //     // console.log(render)
-    // }
-    // console.log("time2 >>>> " + (new Date().getTime() - time1))
-    // var result = fasty.render(testhtml,{"title":"title test","content":"content test..."});
-    // console.log("result >>>>>" ,result)
+    time1 = new Date().getTime();
+
+    for (var i = 0; i < 10000; i++) {
+        var testhtml = "{{set a = \"c\"}} {{set b = \"c\"}} {{if a == b}} xxx    {{/if}}{{title}}{{content}}";
+        template.render(testhtml, data);
+    }
+    console.log("time2 >>>> " + (new Date().getTime() - time1))
 </script>
 
 </body>
