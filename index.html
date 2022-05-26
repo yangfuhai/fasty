@@ -18,7 +18,7 @@
     // var testhtml = "{{~ for(item of array)}} xxx {{~end}}";
     // var testhtml = "{{~ for(item of array)}} xxx  {{~ for (newItem of item.xxx)}} xxxx  {{~end}} {{~end}}";
     // var testhtml = "{{~ for(item of array)}} xxx  {{~ for (newItem of item1.xxx)}} xxxx  {{~end}} {{~end}}";
-    // var testhtml = "{{~ for(var x=0;x<100;i++)}}  xxx {{~end}}";
+    var testhtml = "{{~ for(var x=0;x<100;x++)}}  xxx {{~end}}";
     // var testhtml = "{{~ for(var x=0,a=title;x<title.length;i++)}}  xxx{{a}} {{~end}}";
     // var testhtml = "{{~ var aaa = \"aaa\"}}";
     // var testhtml = "{{~ var aaa = \"aaa\"}}   {{~ for ( x of aaa)}}  {{aaa}}--{{x}}--{{end1}}--end {{~end}}";
@@ -28,7 +28,7 @@
     // var testhtml = "{{~if (a == b)}} xxx {{~end}}";
     // var testhtml = "{{~ var a = \"c\"}} {{~if (a == b)}} xxx {{~end}}";
 
-    var testhtml = "{{~ var a = \"c\",b=\"c\"}} {{~if (a == b)}} xxx    {{~end}}{{title}}{{content}} {{sexString?(1)}} {{a?.b?.c?().d?}}";
+    // var testhtml = "{{~ var a = \"c\",b=\"c\"}} {{~if (a == b)}} xxx    {{~end}}{{title}}{{content}} {{sexString?(1)}} {{a?.b?.c?().d?}}";
 
     var data = {"title": "title test", "content": "content test..."};
     var fasty = new Fasty({
@@ -37,7 +37,8 @@
                 console.log("sexString>>> invoked")
                 return v === 0 ? '女' : '男';
             }
-        }
+        },
+        debug:true
     });
 
     console.log(fasty.render(testhtml, data))

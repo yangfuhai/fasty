@@ -5,6 +5,9 @@ var Fasty = function (options) {
     //default value: false
     this.shareDataFirst = options && typeof options.shareDataFirst != "undefined" ? options.shareDataFirst : false;
 
+    //debug mode
+    this.debug = options && typeof options.debug != "undefined" ? options.debug : false;
+
     //the compile funtions cache
     this.funs = {};
 };
@@ -59,12 +62,6 @@ Fasty.prototype = {
             return this.text.substring(this.tag.length);
         }
 
-
-        this.isSafeTag = function () {
-            return this.tag.endsWith("?");
-        }
-
-
         this.calcMin = function (values) {
             var min = values[0];
             for (let value of values) {
@@ -81,12 +78,22 @@ Fasty.prototype = {
         var fn = this.funs[template];
         if (!fn) {
             var tokens = this._parseTokens(template);
+
+            if (this.debug) {
+                console.log("fasty tokens >>>>>", tokens)
+            }
+
             if (!tokens || tokens.length === 0) {
                 return;
             }
+
             try {
                 var body = this._compileTokens(tokens);
                 fn = new Function("$data", body);
+
+                if (this.debug) {
+                    console.log("fasty fn     >>>>>", fn)
+                }
                 this.funs[template] = fn;
             } catch (err) {
                 console.error("template error  >>>", err);
@@ -114,11 +121,11 @@ Fasty.prototype = {
     },
 
 
-    _proxy: function (data, withSafe, eattr) {
+    _proxy: function (data, withSafe, prev) {
         var that = this;
         return new Proxy(data, {
             withSafe: withSafe,
-            pattr: eattr,
+            pattr: prev,
             get: function (target, attr) {
                 if (typeof attr === "symbol") {
                     return () => "";
@@ -128,9 +135,10 @@ Fasty.prototype = {
                     var ret = target[attr];
                     return ret ? that._proxy(ret, true, attr) : that._proxy(() => {
                     }, true, attr);
+                } else {
+                    var ret = target[attr];
+                    return ret ? ret : (this.withSafe ? "" : undefined)
                 }
-                var v = target[attr];
-                return v ? v : (this.withSafe ? "" : undefined)
             },
 
             apply: function (target, thisArg, argArray) {
