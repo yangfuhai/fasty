@@ -9,14 +9,21 @@ Fasty 是一个简约、超快的 JavaScript 模板引擎， 它使用了非常�
 ## 使用方法
 
 ```javascript
+var template = ' {{attr}} hello {{ func1(name) }} ---'
+var data = {name: "fasty"}
+
 var fasty = new Fasty({
     //共享的模板数据 或者 方法
     share : {
-        att1:'attr',
-        func1:function (){},
+        attr:'text...',
+        func1:function (v){
+            return v + " kiss~~"
+        },
     }
 });
-fasty.render(template,data);
+
+var result = fasty.render(template,data);
+// result : text... hello fasty kiss~~
 ```
 
 
@@ -76,6 +83,23 @@ fasty.render(template,data);
 
 #2
 {{a.bbbb?().ccc?.ddd}}
+```
+
+### 初始化配置
+
+```javascript
+var options = {
+    //共享模板方法和数据
+    share : {
+        attr:'text...',
+        func1:function (v){
+            return v + " kiss~~"
+        },
+    },
+    // 是否是共享数据优先
+    // 默认 false，即： render 方法传入的 data 数据优先
+    shareDataFirst: false, //default is false
+}
 ```
 
 ## 作者

@@ -10,14 +10,21 @@ At the same time, it supports both NodeJS and browser.
 ## Usage
 
 ```javascript
+var template = ' {{attr}} hello {{ func1(name) }} ---'
+var data = {name: "fasty"}
+
 var fasty = new Fasty({
     //the shared template data or functions
     share : {
-        att1:'attr',
-        func1:function (){},
+        attr:'text...',
+        func1:function (v){
+            return v + " kiss~~"
+        },
     }
 });
-fasty.render(template,data);
+
+var result = fasty.render(template,data);
+// result : text... hello fasty kiss~~
 ```
 
 ## Fasty grammar
@@ -76,6 +83,21 @@ fasty.render(template,data);
 
 #2
 {{a.bbbb?().ccc?.ddd}}
+```
+
+### init options
+
+```javascript
+var options = {
+    //the shared template data or functions
+    share : {
+        attr:'text...',
+        func1:function (v){
+            return v + " kiss~~"
+        },
+    },
+    shareDataFirst: false, //default is false
+}
 ```
 
 ## Author
