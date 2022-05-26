@@ -41,8 +41,9 @@ Fasty.prototype = {
             }
 
             this.text = this.text.trim();
-            if (this.isOutput()) {
-                this.text = this.text.replace(/\?/g, "$safe")
+            if (this.isOutput() && this.safelyAccess) {
+                this.text = this.text.replace(/\?\./g, "$safe.")
+                    .replace(/\?\(/g, "$safe(")
             }
 
             var sIndexOf = this.text.indexOf(' ');

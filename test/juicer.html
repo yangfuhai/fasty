@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>fasty</title>
+
+    <script src="../fasty.js"></script>
+    <script src="./juicer.js"></script>
+
+</head>
+
+<body>
+<script>
+
+    var fasty_html = '<div class="modal">' +
+        '  <div class="modal-dialog modal-lg">' +
+        '    <div class="modal-content shadow-lg">' +
+        '      <div class="modal-header">' +
+        '        <h5 class="modal-title">{{title}}</h5>' +
+        '        <button type="button" class="close" data-dismiss="modal" aria-label="Close" >' +
+        '          <span aria-hidden="true">&times;</span>' +
+        '        </button>' +
+        '      </div>' +
+        '      <div class="modal-body" style="word-break: break-all">' +
+        '        <p>{{content}}</p>' +
+        '      </div>' +
+        '      <div class="modal-footer">' +
+        '        <button type="button" class="btn btn-secondary" data-dismiss="modal"> 关闭 </button>' +
+        '      </div>' +
+        '    </div>' +
+        '  </div>' +
+        '</div>';
+
+    var data = {"title": "test-title", "content": "content test..."};
+    var fasty = new Fasty();
+
+    let time1 = new Date().getTime();
+    for (var i = 0; i < 1000000; i++) {
+        fasty.render(fasty_html, data);
+    }
+    console.log("fasty need time for render 1000000 times>>>> " + (new Date().getTime() - time1))
+    time1 = new Date().getTime();
+
+    var juicer_html = '<div class="modal">' +
+        '  <div class="modal-dialog modal-lg">' +
+        '    <div class="modal-content shadow-lg">' +
+        '      <div class="modal-header">' +
+        '        <h5 class="modal-title">${title}</h5>' +
+        '        <button type="button" class="close" data-dismiss="modal" aria-label="Close" >' +
+        '          <span aria-hidden="true">&times;</span>' +
+        '        </button>' +
+        '      </div>' +
+        '      <div class="modal-body" style="word-break: break-all">' +
+        '        <p>${content}</p>' +
+        '      </div>' +
+        '      <div class="modal-footer">' +
+        '        <button type="button" class="btn btn-secondary" data-dismiss="modal"> 关闭 </button>' +
+        '      </div>' +
+        '    </div>' +
+        '  </div>' +
+        '</div>';
+    for (var i = 0; i < 1000000; i++) {
+        juicer(juicer_html, data);
+    }
+    console.log("juicer need time for render 1000000 times>>>> " + (new Date().getTime() - time1))
+
+</script>
+
+</body>
+
+</html>

@@ -29,6 +29,25 @@
     // var testhtml = "{{~ var a = \"c\"}} {{~if (a == b)}} xxx {{~end}}";
     // var testhtml = "{{~ var a = \"c\",b=\"c\"}} {{~if (a == b)}} xxx    {{~end}}{{title}}{{content}} {{sexString?(1)}} {{a?.b?.c?().d?}}";
 
+    var testhtml = '<div class="modal">' +
+        '  <div class="modal-dialog modal-lg">' +
+        '    <div class="modal-content shadow-lg">' +
+        '      <div class="modal-header">' +
+        '        <h5 class="modal-title">{{title}}</h5>' +
+        '        <button type="button" class="close" data-dismiss="modal" aria-label="Close" >' +
+        '          <span aria-hidden="true">&times;</span>' +
+        '        </button>' +
+        '      </div>' +
+        '      <div class="modal-body" style="word-break: break-all">' +
+        '        <p>{{content}}</p>' +
+        '      </div>' +
+        '      <div class="modal-footer">' +
+        '        <button type="button" class="btn btn-secondary" data-dismiss="modal"> 关闭 </button>' +
+        '      </div>' +
+        '    </div>' +
+        '  </div>' +
+        '</div>';
+
     var data = {"title": "title test", "content": "content test..."};
     var fasty = new Fasty({
         share: {
