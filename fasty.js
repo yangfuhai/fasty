@@ -1,6 +1,14 @@
 var Fasty = function (options) {
+    //the shared methods and data
+    this.share = options && options.share ? options.share : null;
+
+    //default value: false
+    this.shareDataFirst = options && typeof options.shareDataFirst != "undefined" ? options.shareDataFirst : false;
+
+    //the compile funtions cache
     this.funs = {};
 };
+
 Fasty.prototype = {
     Tok: function (type) {
         //type: 0 text, 1 output, 2 js
@@ -12,7 +20,7 @@ Fasty.prototype = {
             this.text += text;
         }
 
-        this.isEmpty = function (){
+        this.isEmpty = function () {
             return this.text === '';
         }
 
@@ -29,6 +37,10 @@ Fasty.prototype = {
             if (this.isText()) {
                 return;
             }
+            if (this.isOutput()) {
+                this.text = this.text.replace(/\?/g, "$safe")
+            }
+
             var sIndexOf = this.text.indexOf(' ');
             var bIndexOf = this.text.indexOf('(');
             var pIndexOf = this.text.indexOf('.');
@@ -83,13 +95,51 @@ Fasty.prototype = {
             }
         }
 
-        var proxy = new Proxy(data, {
+        if (!data) {
+            data = {};
+        }
+
+        //put the share data
+        if (this.share) {
+            for (let key of Object.keys(this.share)) {
+                if (this.shareDataFirst) {
+                    data[key] = this.share[key];
+                } else if (!data[key]) {
+                    data[key] = this.share[key];
+                }
+            }
+        }
+
+        return fn(this._proxy(data, false));
+    },
+
+
+    _proxy: function (data, withSafe, eattr) {
+        var that = this;
+        return new Proxy(data, {
+            withSafe: withSafe,
+            pattr: eattr,
             get: function (target, attr) {
-                return target[attr] || "";
+                if (typeof attr === "symbol") {
+                    return () => "";
+                }
+                if (attr.endsWith("$safe")) {
+                    attr = attr.substring(0, attr.length - 5);
+                    var ret = target[attr];
+                    return ret ? that._proxy(ret, true, attr) : that._proxy(() => {
+                    }, true, attr);
+                }
+                var v = target[attr];
+                return v ? v : (this.withSafe ? "" : undefined)
+            },
+
+            apply: function (target, thisArg, argArray) {
+                if (Reflect.has(thisArg, target.name)) {
+                    return target(argArray);
+                }
+                return that._proxy({}, true, this.pattr);
             }
         })
-
-        return fn(proxy);
     },
 
 

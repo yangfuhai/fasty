@@ -28,10 +28,16 @@
     // var testhtml = "{{~ var aaa = \"aaa\"}}   {{~ for ( x of aaa)}}  {{aaa}}--{{x}}--{{end1}}--end  {{~for (var i=0;i< x.length;i++)}}  {{x[i]}} {{aaa}} {{bbb}} {{~end}} {{~end}} {{x}} {{aaa}} {{bbb}}";
     // var testhtml = "{{~if (a == b)}} xxx {{~end}}";
     // var testhtml = "{{~ var a = \"c\"}} {{~if (a == b)}} xxx {{~end}}";
-    var testhtml = "{{~ var a = \"c\",b=\"c\"}} {{~if (a == b)}} xxx    {{~end}}{{title}}{{content}}";
+    var testhtml = "{{~ var a = \"c\",b=\"c\"}} {{~if (a == b)}} xxx    {{~end}}{{title}}{{content}} {{sexString(1)}}";
 
     var data = {"title": "title test", "content": "content test..."};
-    var fasty = new Fasty();
+    var fasty = new Fasty({
+        share:{
+            sexString:function (v){
+               return v === 0 ? '女' : '男';
+            }
+        }
+    });
 
     let time1 = new Date().getTime();
     for (var i = 0; i < 10000; i++) {
@@ -41,8 +47,8 @@
     console.log("time1 >>>> " + (new Date().getTime() - time1))
     time1 = new Date().getTime();
 
+    var testhtml = "{{set a = \"c\"}} {{set b = \"c\"}} {{if a == b}} xxx    {{/if}}{{title}}{{content}}";
     for (var i = 0; i < 10000; i++) {
-        var testhtml = "{{set a = \"c\"}} {{set b = \"c\"}} {{if a == b}} xxx    {{/if}}{{title}}{{content}}";
         template.render(testhtml, data);
     }
     console.log("time2 >>>> " + (new Date().getTime() - time1))
