@@ -5,8 +5,8 @@ var Fasty = function (options) {
     //default value: false
     this.shareDataFirst = options && typeof options.shareDataFirst != "undefined" ? options.shareDataFirst : false;
 
-    //debug mode
-    this.debug = options && typeof options.debug != "undefined" ? options.debug : false;
+    //safely Access mode
+    this.safelyAccess = options && typeof options.safelyAccess != "undefined" ? options.safelyAccess : true;
 
     //the compile funtions cache
     this.funs = {};
@@ -36,10 +36,11 @@ Fasty.prototype = {
         }
 
         this.arrange = function () {
-            this.text = this.text.trim();
             if (this.isText()) {
                 return;
             }
+
+            this.text = this.text.trim();
             if (this.isOutput()) {
                 this.text = this.text.replace(/\?/g, "$safe")
             }
@@ -77,12 +78,8 @@ Fasty.prototype = {
     render: function (template, data) {
         var fn = this.funs[template];
         if (!fn) {
+
             var tokens = this._parseTokens(template);
-
-            if (this.debug) {
-                console.log("fasty tokens >>>>>", tokens)
-            }
-
             if (!tokens || tokens.length === 0) {
                 return;
             }
@@ -90,10 +87,6 @@ Fasty.prototype = {
             try {
                 var body = this._compileTokens(tokens);
                 fn = new Function("$data", body);
-
-                if (this.debug) {
-                    console.log("fasty fn     >>>>>", fn)
-                }
                 this.funs[template] = fn;
             } catch (err) {
                 console.error("template error  >>>", err);
@@ -106,7 +99,7 @@ Fasty.prototype = {
             data = {};
         }
 
-        //put the share data
+        // Put the share data or functions
         if (this.share) {
             for (let key of Object.keys(this.share)) {
                 if (this.shareDataFirst) {
@@ -123,13 +116,15 @@ Fasty.prototype = {
 
     _proxy: function (data, withSafe, prev) {
         var that = this;
-        return new Proxy(data, {
+        return !this.safelyAccess ? data : new Proxy(data, {
             withSafe: withSafe,
             pattr: prev,
             get: function (target, attr) {
                 if (typeof attr === "symbol") {
                     return () => "";
                 }
+
+                //safely access
                 if (attr.endsWith("$safe")) {
                     attr = attr.substring(0, attr.length - 5);
                     var ret = target[attr];

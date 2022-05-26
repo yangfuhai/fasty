@@ -110,6 +110,10 @@ var options = {
     // 是否是共享数据优先
     // 默认 false，即： render 方法传入的 data 数据优先
     shareDataFirst: false, //default is false
+    
+    //是否开启安全访问，这个功能是使用 Proxy 实现的，不支持 IE 浏览器
+    //IE 下需要设置为 false
+    safelyAccess: true,
 }
 ```
 

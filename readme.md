@@ -86,7 +86,7 @@ var result = fasty.render(template,data);
 {{~end}}
 ```
 
-### secure access
+### safely access
 
 ```
 #1
@@ -108,6 +108,7 @@ var options = {
         },
     },
     shareDataFirst: false, //default is false
+    safelyAccess: true,//default is true, bug not support IE
 }
 ```
 
