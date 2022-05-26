@@ -8,6 +8,17 @@ Fasty 是一个简约、超快的 JavaScript 模板引擎， 它使用了非常�
 
 ## 使用方法
 
+**示例1**
+```javascript
+var template = '<div> hello {{ name }} </div>'
+var data = {name: "fasty"}
+
+var fasty = new Fasty();
+var result = fasty.render(template,data);
+// result :<div> hello fasty </div>
+```
+
+**示例2**
 ```javascript
 var template = ' {{attr}} hello {{ func1(name) }} ---'
 var data = {name: "fasty"}

@@ -9,6 +9,17 @@ At the same time, it supports both NodeJS and browser.
 
 ## Usage
 
+**Usage 1**
+```javascript
+var template = '<div> hello {{ name }} </div>'
+var data = {name: "fasty"}
+
+var fasty = new Fasty();
+var result = fasty.render(template,data);
+// result :<div> hello fasty </div>
+```
+
+**Usage 2**
 ```javascript
 var template = ' {{attr}} hello {{ func1(name) }} ---'
 var data = {name: "fasty"}
