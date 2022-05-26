@@ -1,5 +1,7 @@
 # Fasty -  a faster javascript templating engine.
 
+[中文文档](./readme_cn.md)
+
 Fasty is a simple and super fast templating engine that 
 use a template rendering speed by a special cache solution(Original), 
 hence achieving runtime performance which is close to the limits of JavaScript. 
@@ -21,7 +23,7 @@ var result = fasty.render(template,data);
 
 **Usage 2**
 ```javascript
-var template = ' {{attr}} hello {{ func1(name) }} ---'
+var template = ' {{attr}} hello {{ func1(name) }}'
 var data = {name: "fasty"}
 
 var fasty = new Fasty({
