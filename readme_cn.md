@@ -45,7 +45,7 @@ var result = fasty.render(template,data);
 
 ```
 // #1
-{{var x = 100}}
+{{~ var x = 100}}
 {{x}}
 
 // #2
