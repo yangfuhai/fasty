@@ -9,7 +9,13 @@ Fasty 是一个简约、超快的 JavaScript 模板引擎， 它使用了非常�
 ## 使用方法
 
 ```javascript
-var fasty = new Fasty();
+var fasty = new Fasty({
+    //共享的模板数据 或者 方法
+    share : {
+        att1:'attr',
+        func1:function (){},
+    }
+});
 fasty.render(template,data);
 ```
 
@@ -60,6 +66,16 @@ fasty.render(template,data);
 {{~for (var x = i;x < 100;x++)}}
 
 {{~end}}
+```
+
+### 安全访问
+
+```
+#1
+{{a?.b?.c}}
+
+#2
+{{a.bbbb?().ccc?.ddd}}
 ```
 
 ## 作者

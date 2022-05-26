@@ -10,7 +10,13 @@ At the same time, it supports both NodeJS and browser.
 ## Usage
 
 ```javascript
-var fasty = new Fasty();
+var fasty = new Fasty({
+    //the shared template data or functions
+    share : {
+        att1:'attr',
+        func1:function (){},
+    }
+});
 fasty.render(template,data);
 ```
 
@@ -60,6 +66,16 @@ fasty.render(template,data);
 {{~for (var x = i;x < 100;x++)}}
 
 {{~end}}
+```
+
+### secure access
+
+```
+#1
+{{a?.b?.c}}
+
+#2
+{{a.bbbb?().ccc?.ddd}}
 ```
 
 ## Author
