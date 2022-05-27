@@ -377,7 +377,7 @@ Fasty.prototype = {
         }
 
         // Javascript Object
-        if(["Object","Number","String","Boolean","Array","Math","Date"].includes(v)){
+        if (["Object", "Number", "String", "Boolean", "Array", "Math", "Date"].includes(v)) {
             return true;
         }
 
