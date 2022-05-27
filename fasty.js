@@ -118,7 +118,7 @@ Fasty.prototype = {
         }
 
         data['$escape'] = function (value) {
-            return  value.toString()
+            return value.toString()
                 .replace(/\&/g, '&amp;')
                 .replace(/\</g, '&lt;')
                 .replace(/\>/g, '&gt;')
