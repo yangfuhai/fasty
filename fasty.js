@@ -375,6 +375,12 @@ Fasty.prototype = {
                 return true;
             }
         }
+
+        // Javascript Object
+        if(["Object","Number","String","Boolean","Array","Math","Date"].includes(v)){
+            return true;
+        }
+
         return false;
     },
 

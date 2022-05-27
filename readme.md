@@ -56,11 +56,11 @@ var result = fasty.render(template,data);
 
 ### if-else
 ```
-{{~if (x == 100)}}
+{{~ if (x == 100) }}
 
-{{~else if(x == 200)}}
+{{~ elseif(x == 200) }}
 
-{{~else}}
+{{~ else }}
 
 {{~end}}
 ```
@@ -68,24 +68,24 @@ var result = fasty.render(template,data);
 ### for-loop
 ```
 // #1
-{{~for (item of array)}}
+{{~ for (item of array) }}
 
 {{~end}}
 
 // #2
-{{~for (item in array)}}
+{{~ for (item in array) }}
 
 {{~end}}
 
 // #3
-{{~for (key of Object.keys(item))}}
+{{~ for (key of Object.keys(item) )}}
 
 {{~end}}
 
 // #4
-{{~for (var x = i;x < 100;x++)}}
+{{~ for (var x = i;x < 100;x++) }}
 
-{{~end}}
+{{~ end }}
 ```
 
 ### safely access

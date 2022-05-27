@@ -54,19 +54,19 @@ var result = fasty.render(template,data);
 
 ### if-else
 ```
-{{~if (x == 100)}}
+{{~ if (x == 100)}}
 
-{{~else if(x == 200)}}
+{{~ elseif(x == 200)}}
 
-{{~else}}
+{{~ else}}
 
-{{~end}}
+{{~ end}}
 ```
 
 ### for 循环
 ```
 // #1
-{{~for (item of array)}}
+{{~ for (item of array)}}
 
 {{~end}}
 
