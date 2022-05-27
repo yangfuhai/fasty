@@ -52,38 +52,86 @@ var result = fasty.render(template,data);
 {{"hello world"}}
 ```
 
+
+## 变量定义
+
+```
+#1
+{{~ var a =100}}
+
+#2
+{{~ var a =100,b = 200,c=300}}
+
+#3
+#{{~ let a =100}}
+
+#4
+#{{~ let a =100,b=200,c=300}}
+
+#4
+#{{~ const a =100}}
+
+#5
+#{{~ const a =100,b=200,c=300}}
+```
+
 ### if-else
+
 ```
-{{~ if (x == 100)}}
+{{~ if (x == 100) }}
 
-{{~ elseif(x == 200)}}
+{{~ elseif(x == 200) }}
 
-{{~ else}}
+{{~ else if(x == 300) }}
 
-{{~ end}}
+{{~ else }}
+
+{{~ end }}
 ```
+
+> 同时支持 'elseif' or 'else if'
 
 ### for 循环
 ```
 // #1
-{{~ for (item of array)}}
+{{~ for (item of array) }}
 
 {{~end}}
 
 // #2
-{{~for (item in array)}}
+{{~ for (item in array) }}
 
 {{~end}}
 
 // #3
-{{~for (key of Object.keys(item))}}
+{{~ for (let item of array) }}
 
 {{~end}}
 
 // #4
-{{~for (var x = i;x < 100;x++)}}
+{{~ for (const item in array) }}
 
 {{~end}}
+
+// #5
+{{~ for (key of Object.keys(item) )}}
+
+{{~end}}
+
+// #6
+{{~ for (var x = i;x < 100;x++) }}
+
+{{~ end }}
+
+// #7
+{{~ for (item of someMethodInvoke().other()) }}
+
+{{~end}}
+
+// #8
+{{~ for (var x = i;x < someMethodInvoke().other();x++) }}
+
+{{~ end }}
 ```
 
 ### 安全访问
@@ -111,8 +159,8 @@ var options = {
     // 默认 false，即： render 方法传入的 data 数据优先
     shareDataFirst: false, //default is false
     
-    //是否开启安全访问，这个功能是使用 Proxy 实现的，不支持 IE 浏览器
-    //IE 下需要设置为 false
+    //是否开启安全访问，这个功能不支持 IE 浏览器
+    //IE 下需要设置为 false，同时配置 false 后会得到更高的运行性能
     safelyAccess: true,
 }
 ```

@@ -54,16 +54,43 @@ var result = fasty.render(template,data);
 {{"hello world"}}
 ```
 
+## Variables definition
+
+```
+#1
+{{~ var a =100}}
+
+#2
+{{~ var a =100,b = 200,c=300}}
+
+#3
+#{{~ let a =100}}
+
+#4
+#{{~ let a =100,b=200,c=300}}
+
+#4
+#{{~ const a =100}}
+
+#5
+#{{~ const a =100,b=200,c=300}}
+```
+
 ### if-else
+
 ```
 {{~ if (x == 100) }}
 
 {{~ elseif(x == 200) }}
 
-{{~ else }}
+{{~ else if(x == 300) }}
 
-{{~end}}
+{{~ else}}
+
+{{~ end}}
 ```
+
+>Both support 'elseif' or 'else if'
 
 ### for-loop
 ```
@@ -78,12 +105,32 @@ var result = fasty.render(template,data);
 {{~end}}
 
 // #3
-{{~ for (key of Object.keys(item) )}}
+{{~ for (let item of array) }}
 
 {{~end}}
 
 // #4
+{{~ for (const item in array) }}
+
+{{~end}}
+
+// #5
+{{~ for (key of Object.keys(item) )}}
+
+{{~end}}
+
+// #6
 {{~ for (var x = i;x < 100;x++) }}
+
+{{~ end }}
+
+// #7
+{{~ for (item of someMethodInvoke().other()) }}
+
+{{~end}}
+
+// #8
+{{~ for (var x = i;x < someMethodInvoke().other();x++) }}
 
 {{~ end }}
 ```
