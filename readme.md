@@ -151,7 +151,7 @@ var result = fasty.render(template,data);
 {{a.bbbb?().ccc?.ddd}}
 ```
 
-### init options
+### init by options
 
 ```javascript
 var options = {
@@ -175,6 +175,10 @@ var options = {
     //custom escape method 
     $unescape:function (value){return value}
 }
+
+
+var fasty = new Fasty(options);
+fast.render(template,data)
 ```
 
 ## Author

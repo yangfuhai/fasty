@@ -177,6 +177,9 @@ var options = {
     //当使用 {{! ... }} 的时候使用该方法转换
     $unescape:function (value){return value}
 }
+
+var fasty = new Fasty(options);
+fast.render(template,data)
 ```
 
 ## 作者
