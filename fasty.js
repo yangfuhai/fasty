@@ -118,7 +118,7 @@ Fasty.prototype = {
         }
 
         data['$escape'] = function (value) {
-            return value.toString()
+            return  value.toString()
                 .replace(/\&/g, '&amp;')
                 .replace(/\</g, '&lt;')
                 .replace(/\>/g, '&gt;')
@@ -210,13 +210,13 @@ Fasty.prototype = {
                 }
 
                 //escape
-                if (template.charAt(pos + 2) === '#') {
+                else if (template.charAt(pos + 2) === '#') {
                     pos += 3;
                     tok = new this.Tok(2);
                 }
 
                 //unescape
-                if (template.charAt(pos + 2) === '!') {
+                else if (template.charAt(pos + 2) === '!') {
                     pos += 3;
                     tok = new this.Tok(3);
                 }
