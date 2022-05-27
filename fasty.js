@@ -267,11 +267,12 @@ Fasty.prototype = {
             if (tok.isText()) {
                 body += 'ret += \'' + tok.text.replace(/\'/g, '\\\'').replace(/\"/g, '\\\"') + '\';'
             } else if (tok.isOutput()) {
-                if (this._inContextVars(contextVars, tok.tag)) {
-                    body += 'ret += ' + tok.text + ';'
-                } else {
-                    body += 'ret += $data.' + tok.text + ';'
-                }
+                // if (this._inContextVars(contextVars, tok.tag)) {
+                //     body += 'ret += ' + tok.text + ';'
+                // } else {
+                //     body += 'ret += $data.' + tok.text + ';'
+                // }
+                body += 'ret += ' + this._compileObjectOrMethodInvoke(contextVars, tok.text) + ' ;';
             } else {
                 switch (tok.tag) {
                     case "for":
@@ -370,7 +371,7 @@ Fasty.prototype = {
         var rb = methodInvoke.indexOf(")");
 
         // Not method
-        if (!(rb > lb && lb > p)) {
+        if (!(rb > lb && lb > 0)) {
             if (firstInvoke) {
                 return this._inContextVars(contextVars, methodInvoke)
                     ? methodInvoke : "$data." + methodInvoke;
@@ -380,12 +381,14 @@ Fasty.prototype = {
         }
 
         // Object.keys(obj);
-        var obj = methodInvoke.substring(0, p);
+        // func(paras).xxx
+        var objIndexOf = p !== -1 && p < lb ? p : lb;
+        var obj = methodInvoke.substring(0, objIndexOf);
         if (firstInvoke && !this._inContextVars(contextVars, obj)) {
             obj = "$data." + obj;
         }
 
-        var ret = obj + methodInvoke.substring(p, lb) + "("
+        var ret = obj + methodInvoke.substring(objIndexOf, lb) + "("
         var parasString = methodInvoke.substring(lb + 1, rb);
         var paras = parasString.split(",");
         for (let i = 0; i < paras.length; i++) {

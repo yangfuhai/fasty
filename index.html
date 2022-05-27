@@ -54,15 +54,30 @@
     //     '  </div>' +
     //     '</div>';
 
-    var data = {"title": "title test", "content": "content test..."};
+    // var data = {"title": "title test", "content": "content test..."};
+    // var fasty = new Fasty({
+    //     share: {
+    //         sexString: function (v) {
+    //             console.log("sexString>>> invoked")
+    //             return v === 0 ? '女' : '男';
+    //         }
+    //     },
+    //     safelyAccess:false,//true
+    // });
+
+
+
+    var testhtml = ' {{attr}} hello {{ func1(name) }}'
+    var data = {name: "fasty"}
+
     var fasty = new Fasty({
-        share: {
-            sexString: function (v) {
-                console.log("sexString>>> invoked")
-                return v === 0 ? '女' : '男';
-            }
-        },
-        safelyAccess:false,//true
+        //the shared template data or functions
+        share : {
+            attr:'text...',
+            func1:function (v){
+                return v + " kiss~~"
+            },
+        }
     });
 
     console.log(fasty.render(testhtml, data))
