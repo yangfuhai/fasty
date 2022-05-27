@@ -3,7 +3,7 @@
 Fasty 是一个简约、超快的 JavaScript 模板引擎， 它使用了非常独特（独创的）的缓存技术，从而获得接近 JavaScript 极限的运行性能，并且同时支持 NodeJS 和浏览器。
 
 
-> Fasty 的渲染速度，超过了已知市面上的所有 JavaScript 引擎 100 倍以上。
+> Fasty 的渲染速度，超过很多市面上的 JavaScript 引擎 100 倍以上。
 
 
 ## 使用方法

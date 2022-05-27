@@ -7,7 +7,7 @@ use a template rendering speed by a special cache solution(Original),
 hence achieving runtime performance which is close to the limits of JavaScript. 
 At the same time, it supports both NodeJS and browser.
 
->Fasty Rendering faster is 100+ times  more than other JavaScript engines.
+>Fasty Rendering faster is 100+ times more than other JavaScript engines.
 
 ## Usage
 
