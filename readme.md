@@ -162,8 +162,18 @@ var options = {
             return v + " kiss~~"
         },
     },
-    shareDataFirst: false, //default is false
-    safelyAccess: true,//default is true, bug not support IE
+
+    //default is false
+    shareDataFirst: false,
+
+    //default is true, bug not support IE
+    safelyAccess: true,
+    
+    //custom escape method 
+    $escape:function (value){return value},
+    
+    //custom escape method 
+    $unescape:function (value){return value}
 }
 ```
 

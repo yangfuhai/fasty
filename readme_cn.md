@@ -168,6 +168,14 @@ var options = {
     //是否开启安全访问，这个功能不支持 IE 浏览器
     //IE 下需要设置为 false，同时配置 false 后会得到更高的运行性能
     safelyAccess: true,
+
+    //自定义 html 安全输出方法
+    //当使用 {{# ... }} 的时候使用该方法转换
+    $escape:function (html){return html},
+
+    //自定义 unescape 方法
+    //当使用 {{! ... }} 的时候使用该方法转换
+    $unescape:function (value){return value}
 }
 ```
 
