@@ -55,6 +55,15 @@ Fasty.prototype = {
             } else {
                 this.tag = this.text.substring(0, this.calcMin([sIndexOf, bIndexOf, pIndexOf]));
             }
+
+            //support else if
+            if (this.tag === "else") {
+                var tagAfter = this.getTagAfter().trim();
+                if (tagAfter.startsWith("if")) {
+                    this.tag = "elseif";
+                    this.text = "elseif " + tagAfter.substring(2);
+                }
+            }
         }
 
         this.getTagAfter = function () {
@@ -215,7 +224,7 @@ Fasty.prototype = {
     _compileComparison: function (tok, contextVars) {
         var tagAfter = tok.getTagAfter().trim();
         var fragment = tagAfter.substring(1, tagAfter.length - 1).trim();
-        var comparison = this._appendData(this._getComparison(fragment), contextVars);
+        var comparison = this._getComparison(fragment, contextVars);
         return comparison.before + comparison.op + comparison.after;
     },
 
@@ -231,11 +240,7 @@ Fasty.prototype = {
             }
 
             var name = nameAndValue[0].trim();
-            var value = nameAndValue[1].trim();
-
-            if (!this._inContextVars(contextVars, value)) {
-                value = "$data." + value;
-            }
+            var value = this._compileObjectOrMethodInvoke(contextVars, nameAndValue[1]);
 
             this._pushContextVars(contextVars, contextLevel, name)
 
@@ -277,12 +282,18 @@ Fasty.prototype = {
                         //matched: for (item of array) --- for (item in array)
                         if (items.length === 3 && items[1] === "of" || items[1] === "in") {
                             var newVar = items[0];
-                            var useVar = items[2];
-                            if (!this._inContextVars(contextVars, useVar)) {
-                                useVar = "$data." + useVar;
-                            }
+                            var useVar = this._compileObjectOrMethodInvoke(contextVars, items[2]);
                             this._pushContextVars(contextVars, ++contextLevel, newVar)
                             body += "for (" + newVar + " " + items[1] + " " + useVar + "){"
+                            break;
+                        }
+
+                        //matched: for (let item of array) --- for (const item in array)
+                        if (items.length === 4 && items[2] === "of" || items[2] === "in") {
+                            var newVar = items[1];
+                            var useVar = this._compileObjectOrMethodInvoke(contextVars, items[3]);
+                            this._pushContextVars(contextVars, ++contextLevel, newVar)
+                            body += "for (" + items[0] + " " + newVar + " " + items[2] + " " + useVar + "){"
                             break;
                         }
 
@@ -297,12 +308,11 @@ Fasty.prototype = {
                             //i=0,len=xxx.length
                             body += cTok.tag + " " + this._compileVars(cTok, contextVars, ++contextLevel);
 
-                            var comparison = this._appendData(this._getComparison(cfragments[1]), contextVars);
+                            var comparison = this._getComparison(cfragments[1], contextVars);
                             body += comparison.before + comparison.op + comparison.after + ";";
                             body += cfragments[2] + "){"
                             break;
                         }
-
                         break;
                     case "if":
                         contextLevel++;
@@ -347,66 +357,105 @@ Fasty.prototype = {
         }
     },
 
-    _inContextVars: function (contextVars, v) {
+    _compileObjectOrMethodInvoke: function (contextVars, objOrMethodInvoke) {
+        return this._compileMethodInvoke(contextVars, objOrMethodInvoke, true);
+    },
+
+
+    _compileMethodInvoke(contextVars, methodInvoke, firstInvoke) {
+        methodInvoke = methodInvoke.trim();
+
+        var p = methodInvoke.indexOf(".");
+        var lb = methodInvoke.indexOf("(");
+        var rb = methodInvoke.indexOf(")");
+
+        // Not method
+        if (!(rb > lb && lb > p)) {
+            if (firstInvoke) {
+                return this._inContextVars(contextVars, methodInvoke)
+                    ? methodInvoke : "$data." + methodInvoke;
+            } else {
+                return methodInvoke;
+            }
+        }
+
+        // Object.keys(obj);
+        var obj = methodInvoke.substring(0, p);
+        if (firstInvoke && !this._inContextVars(contextVars, obj)) {
+            obj = "$data." + obj;
+        }
+
+        var ret = obj + methodInvoke.substring(p, lb) + "("
+        var parasString = methodInvoke.substring(lb + 1, rb);
+        var paras = parasString.split(",");
+        for (let i = 0; i < paras.length; i++) {
+            var para = paras[i].trim();
+            if (!this._inContextVars(contextVars, para)) {
+                para = "$data." + para;
+            }
+            ret += para;
+            if (i !== paras.length - 1) {
+                ret += ",";
+            }
+        }
+        ret += ")";
+
+        //end
+        if (rb + 1 === methodInvoke.length) {
+            return ret;
+        }
+
+        //there are some method invoke after
+        return ret + this._compileMethodInvoke(contextVars, methodInvoke.substring(rb + 1), false);
+    },
+
+    _inContextVars: function (contextVars, key) {
         //string
-        if (v.indexOf("\"") === 0 || v.indexOf("\'") === 0) {
+        if (key.indexOf("\"") === 0 || key.indexOf("\'") === 0) {
             return true;
         }
 
         //number
-        if (!isNaN(v)) {
+        if (!isNaN(key)) {
             return true;
         }
 
         //object
-        var indexOf = v.indexOf(".");
+        var indexOf = key.indexOf(".");
         if (indexOf > 0) {
-            v = v.substring(0, indexOf).trim();
+            key = key.substring(0, indexOf).trim();
         }
 
         //array
-        indexOf = v.indexOf("[");
-        if (indexOf > 0 && v.indexOf("]") > indexOf) {
-            v = v.substring(0, indexOf).trim();
+        indexOf = key.indexOf("[");
+        if (indexOf > 0 && key.indexOf("]") > indexOf) {
+            key = key.substring(0, indexOf).trim();
         }
 
+        //contextVars
         for (var childs of Object.values(contextVars)) {
-            if (childs && childs.includes(v)) {
+            if (childs && childs.includes(key)) {
                 return true;
             }
         }
 
         // Javascript Object
-        if (["Object", "Number", "String", "Boolean", "Array", "Math", "Date"].includes(v)) {
-            return true;
-        }
-
-        return false;
+        return ["$data", "Object", "Number", "String", "Boolean", "Array", "Math", "Date"].indexOf(key) > -1;
     },
 
-    _getComparison: function (str) {
+    _getComparison: function (str, contextVars) {
         var ops = ["===", "!==", "==", "!=", ">=", "<=", ">", "<"]
         for (let o of ops) {
             var indexOf = str.indexOf(o);
             if (indexOf > 0) {
                 return {
-                    before: str.substring(0, indexOf).trim(),
+                    before: this._compileObjectOrMethodInvoke(contextVars, str.substring(0, indexOf)),
                     op: o,
-                    after: str.substring(indexOf + o.length).trim()
+                    after: this._compileObjectOrMethodInvoke(contextVars, str.substring(indexOf + o.length))
                 }
             }
         }
     },
-
-    _appendData: function (cprs, contextVars) {
-        if (!this._inContextVars(contextVars, cprs.before)) {
-            cprs.before = "$data." + cprs.before;
-        }
-        if (!this._inContextVars(contextVars, cprs.after)) {
-            cprs.after = "$data." + cprs.after;
-        }
-        return cprs;
-    }
 
 
 }
