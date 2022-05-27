@@ -362,7 +362,7 @@ Fasty.prototype = {
     },
 
 
-    _compileMethodInvoke(contextVars, methodInvoke, firstInvoke) {
+    _compileMethodInvoke: function (contextVars, methodInvoke, firstInvoke) {
         methodInvoke = methodInvoke.trim();
 
         var p = methodInvoke.indexOf(".");
