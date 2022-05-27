@@ -18,7 +18,7 @@ var data = {name: "fasty"}
 
 var fasty = new Fasty();
 var result = fasty.render(template,data);
-// result :<div> hello fasty </div>
+// result: <div> hello fasty </div>
 ```
 
 **Usage 2**
@@ -37,7 +37,7 @@ var fasty = new Fasty({
 });
 
 var result = fasty.render(template,data);
-// result : text... hello fasty kiss~~
+// result: text... hello fasty kiss~~
 ```
 
 ## Fasty grammar
