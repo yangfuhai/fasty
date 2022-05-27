@@ -14,7 +14,7 @@ var Fasty = function (options) {
 
 Fasty.prototype = {
     Tok: function (type) {
-        //type: 0 text, 1 output, 2 js
+        //type: 0 text, 1 output, 2 escape output, 3unescape output   , 9 js
         this.type = type;
         this.tag = "";
         this.text = "";
@@ -32,7 +32,15 @@ Fasty.prototype = {
         }
 
         this.isOutput = function () {
-            return type === 1;
+            return type === 1 || type === 2 || type === 3;
+        }
+
+        this.isEscape = function () {
+            return type === 2;
+        }
+
+        this.isUnEscape = function () {
+            return type === 3;
         }
 
         this.arrange = function () {
@@ -109,7 +117,24 @@ Fasty.prototype = {
             data = {};
         }
 
-        // Put the share data or functions
+        data['$escape'] = function (value) {
+            return value.toString()
+                .replace(/\&/g, '&amp;')
+                .replace(/\</g, '&lt;')
+                .replace(/\>/g, '&gt;')
+                .replace(/\'/g, '&#39;')
+                .replace(/\"/g, '&quot;');
+        }
+
+        data['$unescape'] = function (value) {
+            return value.toString()
+                .replace(/\&amp;/g, '&')
+                .replace(/\&lt;/g, '<')
+                .replace(/\&gt;/g, '>')
+                .replace(/\&#39;/g, '\'')
+                .replace(/\&quot;/g, '"');
+        }
+        // put the share data or functions
         if (this.share) {
             for (let key of Object.keys(this.share)) {
                 if (this.shareDataFirst) {
@@ -119,6 +144,7 @@ Fasty.prototype = {
                 }
             }
         }
+
 
         return fn(this._proxy(data, false));
     },
@@ -176,11 +202,25 @@ Fasty.prototype = {
                     tok.arrange();
                     tok = null;
                 }
+
                 //js
                 if (template.charAt(pos + 2) === '~') {
                     pos += 3;
+                    tok = new this.Tok(9);
+                }
+
+                //escape
+                if (template.charAt(pos + 2) === '#') {
+                    pos += 3;
                     tok = new this.Tok(2);
                 }
+
+                //unescape
+                if (template.charAt(pos + 2) === '!') {
+                    pos += 3;
+                    tok = new this.Tok(3);
+                }
+
                 //output
                 else {
                     pos += 2;
@@ -264,16 +304,22 @@ Fasty.prototype = {
                 body += 'ret += \' \';'
                 continue;
             }
+            //text
             if (tok.isText()) {
                 body += 'ret += \'' + tok.text.replace(/\'/g, '\\\'').replace(/\"/g, '\\\"') + '\';'
-            } else if (tok.isOutput()) {
-                // if (this._inContextVars(contextVars, tok.tag)) {
-                //     body += 'ret += ' + tok.text + ';'
-                // } else {
-                //     body += 'ret += $data.' + tok.text + ';'
-                // }
-                body += 'ret += ' + this._compileObjectOrMethodInvoke(contextVars, tok.text) + ' ;';
-            } else {
+            }
+            //output
+            else if (tok.isOutput()) {
+                if (tok.isEscape()) {
+                    body += 'ret += $data.$escape(' + this._compileObjectOrMethodInvoke(contextVars, tok.text) + ');';
+                } else if (tok.isUnEscape()) {
+                    body += 'ret += $data.$unescape(' + this._compileObjectOrMethodInvoke(contextVars, tok.text) + ');';
+                } else {
+                    body += 'ret += ' + this._compileObjectOrMethodInvoke(contextVars, tok.text) + ';';
+                }
+            }
+            //js
+            else {
                 switch (tok.tag) {
                     case "for":
                         var fragment = tok.text.substring(3).trim();
@@ -301,7 +347,7 @@ Fasty.prototype = {
                         //matched for (var i=0,len=xxx.length; i<len; i++)
                         var cfragments = fragment.split(";");
                         if (cfragments.length === 3) {
-                            var cTok = new this.Tok(2);
+                            var cTok = new this.Tok(9);
                             cTok.text = cfragments[0]; //var i=0,len=xxx.length;
                             cTok.arrange();
 
