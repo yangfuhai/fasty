@@ -489,7 +489,11 @@ Fasty.prototype = {
         }
 
         // Javascript Object
-        return ["$data", "Object", "Number", "String", "Boolean", "Array", "Math", "Date"].indexOf(key) > -1;
+        if (["$data", "Object", "Number", "String", "Boolean", "Array", "Math", "Date"].indexOf(key) > -1) {
+            return true;
+        }
+
+        return typeof window !== "undefined" && window[key];
     },
 
     _getComparison: function (str, contextVars) {
