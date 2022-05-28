@@ -47,15 +47,22 @@ var result = fasty.render(template,data);
 // #1 变量
 {{~ var x = 100}}
 {{x}}
+//输出: 100
+
 
 // #2 字符串
 {{"hello world"}}
+//输出：hello world
+
 
 // #3 安全输出，对 html 进行 escape
-{{# "<div> hellow wordl </div>"}}
+{{# "<div> hello world </div>"}}
+//输出：&lt;div&gt; hello world &lt;/div&gt;
+
 
 // #4 强制转换 html 输出
-{{! "&lt;div&gt; hello &lt;/div&gt;"}}
+{{! "&lt;div&gt; hello world &lt;/div&gt;"}}
+//输出：<div> hello world </div>
 ```
 
 

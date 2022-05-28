@@ -49,15 +49,23 @@ var result = fasty.render(template,data);
 // #1 Variable
 {{~ var x = 100}}
 {{x}}
+//output: 100
+
 
 // #2 string
 {{"hello world"}}
+//output: hello world
+
 
 // #3 escape
-{{# "<div> hellow wordl </div>"}}
+{{# "<div> hello world </div>"}}
+//output: &lt;div&gt; hello world &lt;/div&gt;
+
+
 
 // #4 unescape
-{{! "&lt;div&gt; hello &lt;/div&gt;"}}
+{{! "&lt;div&gt; hello world &lt;/div&gt;"}}
+//output: <div> hello world </div>
 ```
 
 ## Variables definition
