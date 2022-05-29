@@ -270,28 +270,52 @@ Fasty.prototype = {
 
 
     _compileVars: function (tok, contextVars, contextLevel) {
-        var vars = tok.getTagAfter().split(",");
-        var ret = "";
-        for (let i = 0; i < vars.length; i++) {
-            var nameAndValue = vars[i].split("=");
+        var strings = tok.getTagAfter().split('=');
+        var tokens = [];
 
-            if (nameAndValue.length !== 2) {
-                throw new Error("Variable definition error: " + tok.text)
+        for (let str of strings) {
+            str = str.trim();
+
+            //array or string
+            if (this._isArrayOrString(str)) {
+                tokens.push(str)
+            } else {
+                var indexOf = str.lastIndexOf(",");
+                if (indexOf === -1) {
+                    tokens.push(str)
+                } else {
+                    tokens.push(str.substring(0, indexOf));
+                    tokens.push(str.substring(indexOf + 1));
+                }
             }
 
-            var name = nameAndValue[0].trim();
-            var value = this._compileObjectOrMethodInvoke(contextVars, nameAndValue[1]);
+        }
+
+        if (tokens.length === 0 || tokens.length % 2 !== 0) {
+            throw new Error("Variable definition error: " + tok.text)
+        }
+
+        var ret = "";
+        for (let i = 0; i < tokens.length; i += 2) {
+            var name = tokens[i];
+            var value = this._compileObjectOrMethodInvoke(contextVars, tokens[i + 1]);
 
             this._pushContextVars(contextVars, contextLevel, name)
 
             ret += name + "=" + value;
-            if (i === vars.length - 1) {
+            if (i === tokens.length - 2) {
                 ret += ";"
             } else {
                 ret += ","
             }
         }
         return ret;
+    },
+
+    _isArrayOrString: function (str) {
+        return str.indexOf("[") === 0 && str.indexOf("]") === str.length - 1
+            || str.indexOf("\"") === 0 && str.indexOf("\"") === str.length - 1
+            || str.indexOf("'") === 0 && str.indexOf("'") === str.length - 1;
     },
 
 
@@ -419,6 +443,24 @@ Fasty.prototype = {
         // Not method
         if (!(rb > lb && lb > 0)) {
             if (firstInvoke) {
+
+                //array start
+                if (methodInvoke.indexOf("[") === 0 && methodInvoke.indexOf("]") > 0) {
+                    var arrayPart = methodInvoke.substring(1, methodInvoke.indexOf("]"));
+                    var parts = arrayPart.split(",");
+                    var newParts = "[";
+                    for (let i = 0; i < parts.length; i++) {
+                        var newPart = this._compileObjectOrMethodInvoke(contextVars, parts[i], true);
+                        newParts += newPart;
+                        if (i !== parts.length - 1) {
+                            newParts += ",";
+                        } else {
+                            newParts += "]"
+                        }
+                    }
+                    methodInvoke = newParts + methodInvoke.substring(methodInvoke.indexOf("]") + 1);
+                }
+
                 return this._inContextVars(contextVars, methodInvoke)
                     ? methodInvoke : "$data." + methodInvoke;
             } else {
@@ -459,13 +501,19 @@ Fasty.prototype = {
     },
 
     _inContextVars: function (contextVars, key) {
+
+        //number
+        if (!isNaN(key)) {
+            return true;
+        }
+
         //string
         if (key.indexOf("\"") === 0 || key.indexOf("\'") === 0) {
             return true;
         }
 
-        //number
-        if (!isNaN(key)) {
+        //array : [1,2,3].length
+        if (key.indexOf("[") === 0 && key.indexOf("]") > 0) {
             return true;
         }
 
@@ -475,7 +523,7 @@ Fasty.prototype = {
             key = key.substring(0, indexOf).trim();
         }
 
-        //array
+        //array, arrays[i].length == 1
         indexOf = key.indexOf("[");
         if (indexOf > 0 && key.indexOf("]") > indexOf) {
             key = key.substring(0, indexOf).trim();

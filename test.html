@@ -6,52 +6,84 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>fasty</title>
-
     <script src="./fasty.js"></script>
-    <script src="https://unpkg.com/art-template/lib/template-web.js"></script>
-
 </head>
 
 <body>
 <script>
-
-    // var testhtml = "a";
-    // var testhtml = "{{~ for(item of array)}} xxx {{~end}}";
-    // var testhtml = "{{~ for(item of array)}} xxx  {{~ for (newItem of item.xxx)}} xxxx  {{~end}} {{~end}}";
-    // var testhtml = "{{~ for(item of array)}} xxx  {{~ for (newItem of item1.xxx)}} xxxx  {{~end}} {{~end}}";
-    // var testhtml = "{{~ for(var x=0;x<100;i++)}}  xxx {{~end}}";
-    // var testhtml = "{{~ for(var x=0,a=title;x<title.length;i++)}}  xxx{{a}} {{~end}}";
-    // var testhtml = "{{~ var aaa = \"aaa\"}}";
-    // var testhtml = "{{~ var aaa = \"aaa\"}}   {{~ for ( x of aaa)}}  {{aaa}}--{{x}}--{{end1}}--end {{~end}}";
-    // var testhtml = "{{~ var aaa = \"aaa\"}}   {{~ for ( x of aaa)}}  {{aaa}}--{{x}}--{{end1}}--end {{~end}} {{x}} {{aaa}} {{bbb}}";
-    // var testhtml = "{{~ var aaa = \"aaa\"}}   {{~ for ( x of aaa)}}  {{aaa}}--{{x}}--{{end1}}--end  {{~for (var i=0;i< x.length;i++)}}  {{x[i]}}  {{~end}} {{~end}} {{x}} {{aaa}} {{bbb}}";
-    // var testhtml = "{{~ var aaa = \"aaa\"}}   {{~ for ( x of aaa)}}  {{aaa}}--{{x}}--{{end1}}--end  {{~for (var i=0;i< x.length;i++)}}  {{x[i]}} {{aaa}} {{bbb}} {{~end}} {{~end}} {{x}} {{aaa}} {{bbb}}";
-    // var testhtml = "{{~if (a == b)}} xxx {{~end}}";
-    // var testhtml = "{{~ var a = \"c\"}} {{~if (a == b)}} xxx {{~end}}";
-    var testhtml = "{{~ var a = \"c\",b=\"c\"}} {{~if (a == b)}} xxx    {{~end}}{{title}}{{content}} {{sexString(1)}}";
-
+    var template = "";
     var data = {"title": "title test", "content": "content test..."};
     var fasty = new Fasty({
-        share:{
-            sexString:function (v){
-               return v === 0 ? '女' : '男';
+        share: {
+            name: "fasty",
+            sexString: function (v) {
+                return v === 0 ? '女' : '男';
             }
         }
     });
 
-    let time1 = new Date().getTime();
-    for (var i = 0; i < 10000; i++) {
-        fasty.render(testhtml, data);
-        // console.log(render)
-    }
-    console.log("time1 >>>> " + (new Date().getTime() - time1))
-    time1 = new Date().getTime();
 
-    var testhtml = "{{set a = \"c\"}} {{set b = \"c\"}} {{if a == b}} xxx    {{/if}}{{title}}{{content}}";
-    for (var i = 0; i < 10000; i++) {
-        template.render(testhtml, data);
-    }
-    console.log("time2 >>>> " + (new Date().getTime() - time1))
+    template = "1.text";
+    console.log(fasty.render(template, data))
+
+    template = "2.{{~ var x = 100}} {{x}}";
+    console.log(fasty.render(template, data))
+
+    template = "3.{{\"hello world\"}}";
+    console.log(fasty.render(template, data))
+
+    template = '4.{{# "<div> hello world </div>"}}';
+    console.log(fasty.render(template, data))
+
+    template = '5.{{! "&lt;div&gt; hello world &lt;/div&gt;"}}';
+    console.log(fasty.render(template, data))
+
+    template = '6.{{~ var array = [1,2,3]}}  {{~ for(item of array)}}  ---item:{{item}}-- {{~end}}';
+    console.log(fasty.render(template, data))
+
+    template = '7.{{~ var array = ["aaa","aa.bb",title.length]}}  {{~ for(item of array)}}  ---item:{{item}}-- {{~end}}';
+    console.log(fasty.render(template, data))
+
+    template = '8.{{~ var array = ["aaa","aa.bb",title.length]}}  {{~ for(item in array)}}  ---item:{{item}}-- {{~end}}';
+    console.log(fasty.render(template, data))
+
+    template = '9.{{~ var array = ["aaa","aa.bb",title.length]}}  {{~ for(var i=0;i<array.length;i++)}}  ---item:{{array[i]}}-- {{~end}}';
+    console.log(fasty.render(template, data))
+
+    template = '10.{{~ for(var i=0;i< Object.keys(data).length;i++)}}  ---item:{{Object.keys(data)[i]}}-- {{~end}}';
+    console.log(fasty.render(template, data))
+
+    template = '11.test function  --- {{sexString(0)}} --- {{sexString(1)}} ';
+    console.log(fasty.render(template, data))
+
+    template = '12.{{~ var array = ["aaa","aa.bb"]}}  ' +
+        '{{~ for(var i=0;i<array.length;i++)}} ' +
+        ' ---item:{{array[i]}}-- ' +
+        ' {{~ for( x of array[i])}}' +
+        ' {{x}}-' +
+        ' {{~end}}' +
+        '{{~end}}';
+    console.log(fasty.render(template, data))
+
+    template = '13.{{~ if (title == content)}}  ' +
+        '>>aaa ' +
+        '{{~elseif (title.length === 10)}}' +
+        '>>>>bbbb' +
+        '{{~else}}' +
+        '>>>cccc' +
+        '{{~end}}';
+    console.log(fasty.render(template, data))
+
+
+    template = '14.{{~ var array = ["aaa","aa.bb",title.length],other1="aaa,cc,dd",other2=123,other3 = title.length}}' +
+        '  {{~ for(var i=0;i<array.length;i++)}}  ' +
+        '---item:{{array[i]}}-- ' +
+        '{{~end}}'+
+        '{{other1}} '+
+        '{{other2}} '+
+        '{{other3}} ';
+    console.log(fasty.render(template, data))
+
 </script>
 
 </body>
