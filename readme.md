@@ -3,7 +3,7 @@
 [中文文档](./readme_cn.md)
 
 Fasty is a simple and super fast templating engine that 
-use a template rendering speed by a special cache solution(Original), 
+use a template rendering speed by a special cache solution, 
 hence achieving runtime performance which is close to the limits of JavaScript. 
 At the same time, it supports both NodeJS and browser.
 
