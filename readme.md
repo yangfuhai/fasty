@@ -159,6 +159,54 @@ var result = fasty.render(template,data);
 {{a.bbbb?().ccc?.ddd}}
 ```
 
+### Recursive calls
+
+```
+var template1 = '{{~for (item of items)}} {{ myRender(item)}} {{~end}}';
+var template2 = '{{~for (item of childItems)}} {{ myRender(item)}} {{~end}}';
+var fasty = new Fasty({
+    share : {
+        //custom your render function
+        myRender:function (data){
+            return fast.render(data,template2)
+        },
+    }
+});
+
+var data = {
+  items: [
+    {
+      otherAttr: "value1",
+      childItems: [
+        {
+          otherAttr: "value1",
+          childItems: [],
+        },
+        {
+          otherAttr: "value1",
+          childItems: [],
+        },
+      ],
+    },
+    {
+      otherAttr: "value1",
+      childItems: [
+        {
+          otherAttr: "value1",
+          childItems: [],
+        },
+        {
+          otherAttr: "value1",
+          childItems: [],
+        },
+      ],
+    },
+  ],
+};
+fast.render(data,template1);
+```
+
+
 ### init by options
 
 ```javascript

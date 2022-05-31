@@ -162,6 +162,54 @@ var result = fasty.render(template,data);
 {{a.bbbb?().ccc?.ddd}}
 ```
 
+### 递归调用
+
+```javascript
+var template1 = '{{~for (item of items)}} {{ myRender(item)}} {{~end}}';
+var template2 = '{{~for (item of childItems)}} {{ myRender(item)}} {{~end}}';
+var fasty = new Fasty({
+    share : {
+        //自定义你的递归渲染方法
+        myRender:function (data){
+            return fast.render(data,template2)
+        },
+    }
+});
+
+var data = {
+  items: [
+    {
+      otherAttr: "value1",
+      childItems: [
+        {
+          otherAttr: "value1",
+          childItems: [],
+        },
+        {
+          otherAttr: "value1",
+          childItems: [],
+        },
+      ],
+    },
+    {
+      otherAttr: "value1",
+      childItems: [
+        {
+          otherAttr: "value1",
+          childItems: [],
+        },
+        {
+          otherAttr: "value1",
+          childItems: [],
+        },
+      ],
+    },
+  ],
+};
+fast.render(data,template1);
+```
+
+
 ### 初始化配置
 
 ```javascript
