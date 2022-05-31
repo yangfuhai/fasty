@@ -6,7 +6,7 @@ Fasty 是一个简约、超快的 JavaScript 模板引擎， 它使用了非常�
 > Fasty 的渲染速度，超过很多市面上的 JavaScript 引擎 100 倍以上。
 
 ## Fasty 特点
-- 1、极高性能：Fasty 会直接把模板内容编译成 JavaScript 源码执行，而不是使用正则替换，因此，Fasty 的渲染性能超过很多其他模板引擎 100 倍或以上。
+- 1、极高性能：Fasty 直接把模板内容编译成 JavaScript 执行，而不是使用正则替换，因此，Fasty 的渲染性能超过很多其他模板引擎 100 倍或以上。
 - 2、极度简单：Fasty 只内置了输出指令 `{{ }}` 和 逻辑指令 `{{~ }}`
 - 3、非常灵活：Fasty 直接与 JavaScript 打通，比如当我们引用 JQuery 之后，可以直接这样使用 `{{ $("#id").text() }}`
 
@@ -32,7 +32,9 @@ var fasty = new Fasty({
     //共享的模板数据 或者 方法
     share : {
         attr:'text...',
-        func1:function (v){
+        
+        //定义了模板共享方法，因此在 {{...}} 中可以直接使用
+        func1: function (v){
             return v + " kiss~~"
         },
     }
