@@ -58,7 +58,7 @@ var result = fasty.render(template,data);
 
 
 // #3 escape
-{{# "<div> hello world </div>"}}
+{{* "<div> hello world </div>"}}
 //output: &lt;div&gt; hello world &lt;/div&gt;
 
 
@@ -222,13 +222,13 @@ var options = {
     //default is false
     shareDataFirst: false,
 
-    //default is true, bug not support IE
+    //default is true, bug not support for IE
     safelyAccess: true,
     
     //custom escape method 
     $escape:function (value){return value},
     
-    //custom escape method 
+    //custom unescape method 
     $unescape:function (value){return value}
 }
 

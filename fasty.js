@@ -210,7 +210,7 @@ Fasty.prototype = {
                 }
 
                 //escape
-                else if (template.charAt(pos + 2) === '#') {
+                else if (template.charAt(pos + 2) === '*') {
                     pos += 3;
                     tok = new this.Tok(2);
                 }
