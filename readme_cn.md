@@ -232,7 +232,7 @@ var options = {
     safelyAccess: true,
 
     //自定义 html 安全输出方法
-    //当使用 {{# ... }} 的时候使用该方法转换
+    //当使用 {{* ... }} 的时候使用该方法转换
     $escape:function (html){return html},
 
     //自定义 unescape 方法
