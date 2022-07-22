@@ -70,18 +70,28 @@
 
 
     // var testhtml = ' {{attr}} hello {{ func1(name) }} {{* "<div> hello </div>" }} --'
-    var testhtml = ' {{attr}} hello {{ func1(name) }} {{! "&lt;div&gt; hello &lt;/div&gt;"}}'
-    var data = {name: "fasty"}
+    // var testhtml = ' {{attr}} hello {{ func1(name) }} {{! "&lt;div&gt; hello &lt;/div&gt;"}}'
+    // var data = {name: "fasty"}
+    //
+    // var fasty = new Fasty({
+    //     //the shared template data or functions
+    //     share: {
+    //         attr: 'text...',
+    //         func1: function (v) {
+    //             return v + " kiss~~"
+    //         },
+    //     }
+    // });
 
-    var fasty = new Fasty({
-        //the shared template data or functions
-        share: {
-            attr: 'text...',
-            func1: function (v) {
-                return v + " kiss~~"
-            },
-        }
-    });
+
+
+    var testhtml = '  name:{{name}} <br />  otherName:{{otherName}} <br />  ' +
+        '!name:{{! name}} <br />  !otherName:{{!otherName}} <br /> ' +
+        '@name:{{@name}} <br />  @otherName:{{@otherName}}';
+
+    // var data = {name: "<span>fasty</span>",otherName:"&lt;span&gt;otherFasty&lt;/span&gt;"}
+    var data = {name: "<span>fasty</span>",otherName:""}
+    var fasty = new Fasty();
 
     console.log(fasty.render(testhtml, data))
     console.log(document.body.innerHTML = fasty.render(testhtml, data))

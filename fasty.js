@@ -118,6 +118,7 @@ Fasty.prototype = {
         }
 
         data['$escape'] = function (value) {
+            if (!value) return value;
             return value.toString()
                 .replace(/\&/g, '&amp;')
                 .replace(/\</g, '&lt;')
@@ -127,6 +128,7 @@ Fasty.prototype = {
         }
 
         data['$unescape'] = function (value) {
+            if (!value) return value;
             return value.toString()
                 .replace(/\&amp;/g, '&')
                 .replace(/\&lt;/g, '<')
@@ -168,7 +170,7 @@ Fasty.prototype = {
                     }, true, attr);
                 } else {
                     var ret = target[attr];
-                    return ret ? ret : (this.withSafe ? "" : undefined)
+                    return (ret !== null && ret !== undefined) ? ret : (this.withSafe ? "" : undefined)
                 }
             },
 
