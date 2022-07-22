@@ -93,6 +93,7 @@ var result = fasty.render(template,data);
 ### if-else
 
 ```
+#1
 {{~ if (x == 100) }}
 
 {{~ elseif(x == 200) }}
@@ -102,9 +103,16 @@ var result = fasty.render(template,data);
 {{~ else}}
 
 {{~ end}}
+
+
+#2
+{{~ if (x == 200) }}
+output....
+{{~ /if}}
 ```
 
->Both support 'elseif' or 'else if'
+>- both support 'elseif' or 'else if'
+>- support use {{~ /if}} for the end
 
 ### for-loop
 ```
@@ -147,7 +155,15 @@ var result = fasty.render(template,data);
 {{~ for (var x = i;x < someMethodInvoke().other();x++) }}
 
 {{~ end }}
+
+// #9
+{{~ for (var x = i;x < someMethodInvoke().other();x++) }}
+
+{{~ /for }}
 ```
+
+>- support use {{~ /for}} for the end
+
 
 ### safely access
 

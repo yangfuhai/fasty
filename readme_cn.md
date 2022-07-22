@@ -98,6 +98,7 @@ var result = fasty.render(template,data);
 ### if-else
 
 ```
+#1
 {{~ if (x == 100) }}
 
 {{~ elseif(x == 200) }}
@@ -107,9 +108,16 @@ var result = fasty.render(template,data);
 {{~ else }}
 
 {{~ end }}
+
+
+#2
+{{~ if (x == 200) }}
+output....
+{{~ /if}}
 ```
 
-> 同时支持 'elseif' or 'else if'
+>- 同时支持 'elseif' 和 'else if'
+>- if 结尾支持使用 {{~end}} 和 {{~ /if}}
 
 ### for 循环
 ```
@@ -153,6 +161,8 @@ var result = fasty.render(template,data);
 
 {{~ end }}
 ```
+
+>- for 循环结尾支持使用 {{~end}} 和 {{~ /for}}
 
 ### 安全访问
 
