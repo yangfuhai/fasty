@@ -85,11 +85,17 @@
 
 
 
-    var testhtml = '  name:{{name}} <br />  otherName:{{otherName}} <br />  ' +
-        '!name:{{! name}} <br />  !otherName:{{!otherName}} <br /> ' +
-        '@name:{{@name}} <br />  @otherName:{{@otherName}}';
+    // var testhtml = '  name:{{name}} <br />  otherName:{{otherName}} <br />  ' +
+    //     '!name:{{! name}} <br />  !otherName:{{!otherName}} <br /> ' +
+    //     '@name:{{@name}} <br />  @otherName:{{@otherName}}';
+    //
+    // // var data = {name: "<span>fasty</span>",otherName:"&lt;span&gt;otherFasty&lt;/span&gt;"}
+    // var data = {name: "<span>fasty</span>",otherName:""}
+    // var fasty = new Fasty();
 
-    // var data = {name: "<span>fasty</span>",otherName:"&lt;span&gt;otherFasty&lt;/span&gt;"}
+
+
+    var testhtml = ' {{~var x = 100}} {{~ if (x == 100)}} 100  {{~/if}}   {{~for (var i = 0;i<x;i++)}}   {{i}}  {{~/for}}';
     var data = {name: "<span>fasty</span>",otherName:""}
     var fasty = new Fasty();
 
