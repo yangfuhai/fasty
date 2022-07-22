@@ -76,29 +76,29 @@ var result = fasty.render(template,data);
 ## 变量定义
 
 ```
-#1
+// #1
 {{~ var a =100}}
 
-#2
+// #2
 {{~ var a =100,b = 200,c=300}}
 
-#3
-#{{~ let a =100}}
+// #3
+{{~ let a =100}}
 
-#4
-#{{~ let a =100,b=200,c=300}}
+// #4
+{{~ let a =100,b=200,c=300}}
 
-#4
-#{{~ const a =100}}
+// #5
+{{~ const a =100}}
 
-#5
+// #6
 #{{~ const a =100,b=200,c=300}}
 ```
 
 ### if-else
 
 ```
-#1
+// #1
 {{~ if (x == 100) }}
 
 {{~ elseif(x == 200) }}
@@ -110,7 +110,7 @@ var result = fasty.render(template,data);
 {{~ end }}
 
 
-#2
+// #2
 {{~ if (x == 200) }}
 output....
 {{~ /if}}
@@ -167,10 +167,10 @@ output....
 ### 安全访问
 
 ```
-#1
+// #1
 {{a?.b?.c}}
 
-#2
+// #2
 {{a.bbbb?().ccc?.ddd}}
 ```
 
