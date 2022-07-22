@@ -92,7 +92,7 @@ var result = fasty.render(template,data);
 {{~ const a =100}}
 
 // #6
-#{{~ const a =100,b=200,c=300}}
+{{~ const a =100,b=200,c=300}}
 ```
 
 ### if-else
