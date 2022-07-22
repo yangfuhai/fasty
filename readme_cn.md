@@ -63,12 +63,12 @@ var result = fasty.render(template,data);
 
 
 // #3 安全输出，对 html 进行 escape
-{{* "<div> hello world </div>"}}
+{{! "<div> hello world </div>"}}
 //输出：&lt;div&gt; hello world &lt;/div&gt;
 
 
 // #4 强制转换 html 输出
-{{! "&lt;div&gt; hello world &lt;/div&gt;"}}
+{{@ "&lt;div&gt; hello world &lt;/div&gt;"}}
 //输出：<div> hello world </div>
 ```
 

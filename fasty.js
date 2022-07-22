@@ -14,7 +14,7 @@ var Fasty = function (options) {
 
 Fasty.prototype = {
     Tok: function (type) {
-        //type: 0 text, 1 output, 2 escape output, 3unescape output   , 9 js
+        //type: 0 text, 1 output, 2 escape output, 3 unescape output, 9 js
         this.type = type;
         this.tag = "";
         this.text = "";
@@ -210,13 +210,13 @@ Fasty.prototype = {
                 }
 
                 //escape
-                else if (template.charAt(pos + 2) === '*') {
+                else if (template.charAt(pos + 2) === '!') {
                     pos += 3;
                     tok = new this.Tok(2);
                 }
 
                 //unescape
-                else if (template.charAt(pos + 2) === '!') {
+                else if (template.charAt(pos + 2) === '@') {
                     pos += 3;
                     tok = new this.Tok(3);
                 }
@@ -396,6 +396,8 @@ Fasty.prototype = {
                         body += "}else if(" + this._compileComparison(tok, contextVars) + "){";
                         break;
                     case "end":
+                    case "/if":
+                    case "/for":
                         contextVars[contextLevel--] = null;
                         body += "}";
                         break;
