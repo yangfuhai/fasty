@@ -298,8 +298,7 @@ Fasty.prototype = {
 
         var result;
         if (andIndexOf !== -1 && (andIndexOf < orIndexOf || orIndexOf === -1)) {
-            var substring = fragment.substring(0, andIndexOf);
-            var comparison = this._getComparison(substring, contextVars);
+            var comparison = this._getComparison(fragment.substring(0, andIndexOf), contextVars);
             result = comparison.toString() + " && " + this._compileComparisonString(fragment.trim().substring(andIndexOf + 2), contextVars);
         } else if (orIndexOf !== -1 && (orIndexOf < andIndexOf || andIndexOf === -1)) {
             var comparison = this._getComparison(fragment.substring(0, orIndexOf), contextVars);
