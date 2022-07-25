@@ -484,7 +484,7 @@ Fasty.prototype = {
                     this.value += text;
                 },
                 compile: function (isInvoke) {
-                    if (this.value.trim().length == 0){
+                    if (this.value.trim().length === 0) {
                         return this.value
                     }
                     if (this.isOperator || isInvoke || that._inContextVars(contextVars, this.value.trim())) {
