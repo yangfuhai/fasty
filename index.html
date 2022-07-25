@@ -110,11 +110,11 @@
     //     "array":[1,2,3]
     // }
 
-    var testhtml = '{{~ for (x of [1,2,3,dataUrl])}} --{{x.toString().length / 2}}-- {{~end}} {{(10+1+2+3) / 2}}';
-    var data = {
-        "dataUrl" :"1asdfasdf0",
-        "array":[1,2,3]
-    }
+    // var testhtml = '{{~ for (x of [1,2,3,dataUrl])}} --{{x.toString().length / 2}}-- {{~end}} {{(10+1+2+3) / 2}}';
+    // var data = {
+    //     "dataUrl" :"1asdfasdf0",
+    //     "array":[1,2,3]
+    // }
 
     // var testhtml = '<div class="form-group clearfix">  <div class="form-label-left">    <legend class="col-form-label pt-0">{{label}}</legend>  </div>  <div class="flex-auto">    {{~ for(let option of options)}}    <div class="form-check form-check-inline">      <input class="form-check-input onchange" name="{{id}}" type="radio"            {{~if (disabled)}}disabled{{~end}}            {{~ if(value == option.value )}} checked {{~end}}            data-attr="{{name}}" id="{{option.value}}-{{id}}" value="{{option.value}}" />      <label class="form-check-label" for="{{option.value}}-{{id}}">{{option.text}}</label>    </div>    {{~end}}  </div></div>';
     // var testhtml = ' {{~ for(let option of options)}}   {{~ if(option.value == "2" )}} checked {{~end}}    {{~end}}         ';
@@ -127,6 +127,13 @@
     //     ],
     //     value:2
     // }
+
+
+    var testhtml = '{{aa}}';
+    var data = {
+        "aa" :"1asdfasdf0",
+        "array":[1,2,3]
+    }
 
 
     // var options = ['a','b']

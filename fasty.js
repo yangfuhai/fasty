@@ -377,11 +377,11 @@ Fasty.prototype = {
             //output
             else if (tok.isOutput()) {
                 if (tok.isEscape()) {
-                    body += 'ret += $data.$escape(' + this._compileObjectOrMethodInvoke(contextVars, tok.text) + ');';
+                    body += 'ret += $data.$escape(' + this._compileObjectOrMethodInvoke(contextVars, tok.text)  + ' ?? "");';
                 } else if (tok.isUnEscape()) {
-                    body += 'ret += $data.$unescape(' + this._compileObjectOrMethodInvoke(contextVars, tok.text) + ');';
+                    body += 'ret += $data.$unescape(' + this._compileObjectOrMethodInvoke(contextVars, tok.text) + ' ?? "");';
                 } else {
-                    body += 'ret += ' + this._compileObjectOrMethodInvoke(contextVars, tok.text) + ';';
+                    body += 'ret += ' + this._compileObjectOrMethodInvoke(contextVars, tok.text) + ' ?? "";';
                 }
             }
             //js
