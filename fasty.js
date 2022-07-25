@@ -472,77 +472,83 @@ Fasty.prototype = {
         }
     },
 
-    _compileObjectOrMethodInvoke: function (contextVars, objOrMethodInvoke) {
-        return this._compileMethodInvoke(contextVars, objOrMethodInvoke, true);
-    },
-
-
-    _compileMethodInvoke: function (contextVars, methodInvoke, firstInvoke) {
-        methodInvoke = methodInvoke.trim();
-
-        var p = methodInvoke.indexOf(".");
-        var lb = methodInvoke.indexOf("(");
-        var rb = methodInvoke.indexOf(")");
-
-        // Not method
-        if (!(rb > lb && lb > 0)) {
-            if (firstInvoke) {
-
-                //array start
-                if (methodInvoke.indexOf("[") === 0 && methodInvoke.indexOf("]") > 0) {
-                    var arrayPart = methodInvoke.substring(1, methodInvoke.indexOf("]"));
-                    var parts = arrayPart.split(",");
-                    var newParts = "[";
-                    for (let i = 0; i < parts.length; i++) {
-                        var newPart = this._compileObjectOrMethodInvoke(contextVars, parts[i], true);
-                        newParts += newPart;
-                        if (i !== parts.length - 1) {
-                            newParts += ",";
-                        } else {
-                            newParts += "]"
-                        }
+    _compileObjectOrMethodInvoke: function (contextVars, methodInvoke) {
+        var tokens = [];
+        var pos = 0;
+        var that = this;
+        var newToken = function (initValue, isOperator) {
+            return {
+                value: initValue,
+                isOperator: isOperator,
+                append: function (text) {
+                    this.value += text;
+                },
+                compile: function (isInvoke) {
+                    if (this.value.trim().length == 0){
+                        return this.value
                     }
-                    methodInvoke = newParts + methodInvoke.substring(methodInvoke.indexOf("]") + 1);
+                    if (this.isOperator || isInvoke || that._inContextVars(contextVars, this.value.trim())) {
+                        return this.value;
+                    } else {
+                        return "$data[\"" + this.value.trim() + "\"]";
+                    }
                 }
-
-                return this._inContextVars(contextVars, methodInvoke)
-                    ? methodInvoke : "$data." + methodInvoke;
-            } else {
-                return methodInvoke;
+            };
+        }
+        var token = newToken("", false);
+        var inString = false;
+        while (!this._isEnd(pos, methodInvoke)) {
+            var c = methodInvoke.charAt(pos);
+            if (c === '\n' || c === '\t') {
+                pos++;
+                continue;
             }
-        }
 
-        // Object.keys(obj);
-        // func(paras).xxx
-        var objIndexOf = p !== -1 && p < lb ? p : lb;
-        var obj = methodInvoke.substring(0, objIndexOf);
-        if (firstInvoke && !this._inContextVars(contextVars, obj)) {
-            obj = "$data." + obj;
-        }
 
-        var ret = obj + methodInvoke.substring(objIndexOf, lb) + "("
-        var parasString = methodInvoke.substring(lb + 1, rb);
-        var paras = parasString.split(",");
-        for (let i = 0; i < paras.length; i++) {
-            var para = paras[i].trim();
-            if (!this._inContextVars(contextVars, para)) {
-                para = "$data." + para;
+            //opreator
+            if (!inString && ["+", "-", "*", "/", "%", "(", ")", "[", "]", ",", "?", ":", "."].indexOf(c) >= 0) {
+                tokens.push(token);
+                tokens.push(newToken(c, true));
+                token = newToken("", false);
+                pos++;
+                continue;
             }
-            ret += para;
-            if (i !== paras.length - 1) {
-                ret += ",";
+
+
+            //string start
+            if (!inString && c === "\"") {
+                tokens.push(token);
+                token = newToken(c, false);
+                inString = true;
+                pos++;
+                continue;
             }
-        }
-        ret += ")";
 
-        //end
-        if (rb + 1 === methodInvoke.length) {
-            return ret;
+            //string end
+            if (inString && c === "\"") {
+                tokens.push(token);
+                token = newToken(c, false);
+                inString = false;
+                pos++;
+                continue;
+            }
+
+            token.append(c);
+            pos++;
         }
 
-        //there are some method invoke after
-        return ret + this._compileMethodInvoke(contextVars, methodInvoke.substring(rb + 1), false);
+        tokens.push(token);
+
+        var result = "";
+        var beforeToken;
+        for (let t of tokens) {
+            var isInvoke = beforeToken && beforeToken.value === ".";
+            result += t.compile(isInvoke);
+            beforeToken = t;
+        }
+        return result;
     },
+
 
     _inContextVars: function (contextVars, key) {
 
