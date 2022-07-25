@@ -241,6 +241,13 @@ var options = {
     //default is true, bug not support for IE
     safelyAccess: true,
     
+    //support window objects, default false
+    windowObjectEnable: false,
+    
+    //which windwo object support, default null
+    //datatype: array, eg: ['$','JQeury']
+    windowObjects: null,
+    
     //custom escape method 
     $escape:function (value){return value},
     

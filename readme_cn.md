@@ -241,6 +241,13 @@ var options = {
     //IE 下需要设置为 false，同时配置 false 后会得到更高的运行性能
     safelyAccess: true,
 
+    //是否支持直接使用 window 对象，默认值为：false
+    windowObjectEnable: false,
+
+    //支持使用哪些 window 对象，数据类型为数组
+    //例如： ['$','JQeury']
+    windowObjects: null,
+
     //自定义 html 安全输出方法
     //当使用 {{* ... }} 的时候使用该方法转换
     $escape:function (html){return html},

@@ -11,6 +11,12 @@ var Fasty = function (options) {
     //debug mode
     this.debugMode = options && typeof options.debugMode !== "undefined" ? options.debugMode : false;
 
+    //support window objects
+    this.windowObjectEnable = options && typeof options.windowObjectEnable !== "undefined" ? options.windowObjectEnable : false;
+
+    //only support the objects
+    // windowObjects = ['$','....']
+    this.windowObjects = options && typeof options.windowObjects !== "undefined" ? options.windowObjects : null;
 
     //the compile funtions cache
     this.funs = {};
@@ -575,8 +581,23 @@ Fasty.prototype = {
             }
         }
 
-        // Javascript Object
-        return ["$data", "Object", "Number", "String", "Boolean", "Array", "Math", "Date", "window"].indexOf(key) > -1;
+        if (["$data", "Object", "Number", "String", "Boolean", "Array", "Math", "Date", "window"].indexOf(key) > -1) {
+            return true;
+        }
+
+        // not support window objects
+        if (!this.windowObjectEnable) {
+            return false;
+        }
+
+        if (this.windowObjects
+            && Array.isArray(this.windowObjects)
+            && this.windowObjects.indexOf(key) > -1) {
+            return true;
+        } else {
+            // window Javascript Object
+            return window && window[key];
+        }
     },
 
     _getComparison: function (str, contextVars) {
