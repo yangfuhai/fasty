@@ -95,9 +95,20 @@
 
 
 
-    var testhtml = ' {{~var x = 100}} {{~ if (x == 100)}} 100  {{~/if}}   {{~for (var i = 0;i<x;i++)}}   {{i}}  {{~/for}}';
-    var data = {name: "<span>fasty</span>",otherName:""}
-    var fasty = new Fasty();
+    // var testhtml = ' {{~var x = 100}} {{~ if (x == 100)}} 100  {{~/if}}   {{~for (var i = 0;i<x;i++)}}   {{i}}  {{~/for}}';
+    // var data = {name: "<span>fasty</span>",otherName:""}
+
+    // var testhtml = '{{~if (a > 1 )}} aaa {{~end}}';
+    // var testhtml = '{{~if (a > 1 && (b > 0 || c< 0))}} xxx {{~end}}';
+    // var testhtml = '{{~ if(required)}} aaa {{~end}}';
+    var testhtml = '{{~if (a > 1 && (b > 0 || c< 0))}} xxx {{~end}} {{~ if(required)}} aaa {{~end}}';
+    var data = {}
+
+
+
+    var fasty = new Fasty({
+        debugMode: true
+    });
 
     console.log(fasty.render(testhtml, data))
     console.log(document.body.innerHTML = fasty.render(testhtml, data))

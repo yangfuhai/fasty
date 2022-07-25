@@ -3,10 +3,12 @@ var Fasty = function (options) {
     this.share = options && options.share ? options.share : null;
 
     //default value: false
-    this.shareDataFirst = options && typeof options.shareDataFirst != "undefined" ? options.shareDataFirst : false;
+    this.shareDataFirst = options && typeof options.shareDataFirst !== "undefined" ? options.shareDataFirst : false;
 
     //safely Access mode
-    this.safelyAccess = options && typeof options.safelyAccess != "undefined" ? options.safelyAccess : true;
+    this.safelyAccess = options && typeof options.safelyAccess !== "undefined" ? options.safelyAccess : true;
+
+    this.debugMode = options && typeof options.debugMode !== "undefined" ? options.debugMode : false;
 
     //the compile funtions cache
     this.funs = {};
@@ -104,6 +106,9 @@ Fasty.prototype = {
 
             try {
                 var body = this._compileTokens(tokens);
+                if (this.debugMode) {
+                    console.log("method body >>>>", body)
+                }
                 fn = new Function("$data", body);
                 this.funs[template] = fn;
             } catch (err) {
@@ -265,9 +270,37 @@ Fasty.prototype = {
 
     _compileComparison: function (tok, contextVars) {
         var tagAfter = tok.getTagAfter().trim();
-        var fragment = tagAfter.substring(1, tagAfter.length - 1).trim();
-        var comparison = this._getComparison(fragment, contextVars);
-        return comparison.before + comparison.op + comparison.after;
+        var fragment = tagAfter.substring(1, tagAfter.length - 1);
+        return this._compileComparisonString(fragment, contextVars);
+    },
+
+
+    _compileComparisonString: function (fragment, contextVars) {
+        if (!fragment) return "";
+        fragment = fragment.trim();
+
+        var withBrackets = false;
+        if (fragment.indexOf("(") === 0 && fragment.lastIndexOf(")") === fragment.length - 1) {
+            fragment = fragment.substring(1, fragment.length - 1);
+            withBrackets = true;
+        }
+
+        var andIndexOf = fragment.indexOf("&&");
+        var orIndexOf = fragment.indexOf("||");
+
+        var result;
+        if (andIndexOf !== -1 && (andIndexOf < orIndexOf || orIndexOf === -1)) {
+            var substring = fragment.substring(0, andIndexOf);
+            var comparison = this._getComparison(substring, contextVars);
+            result = comparison.toString() + " && " + this._compileComparisonString(fragment.trim().substring(andIndexOf + 2), contextVars);
+        } else if (orIndexOf !== -1 && (orIndexOf < andIndexOf || andIndexOf === -1)) {
+            var comparison = this._getComparison(fragment.substring(0, orIndexOf), contextVars);
+            result = comparison.toString() + " || " + this._compileComparisonString(fragment.trim().substring(orIndexOf + 2), contextVars);
+        } else {
+            var comparison = this._getComparison(fragment, contextVars);
+            result = comparison.toString();
+        }
+        return withBrackets ? "( " + result + " )" : result;
     },
 
 
@@ -556,10 +589,15 @@ Fasty.prototype = {
                 return {
                     before: this._compileObjectOrMethodInvoke(contextVars, str.substring(0, indexOf)),
                     op: o,
-                    after: this._compileObjectOrMethodInvoke(contextVars, str.substring(indexOf + o.length))
+                    after: this._compileObjectOrMethodInvoke(contextVars, str.substring(indexOf + o.length)),
+                    toString: function () {
+                        return this.before + this.op + this.after
+                    }
                 }
             }
         }
+
+        return this._compileObjectOrMethodInvoke(contextVars, str);
     },
 
 
