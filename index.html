@@ -100,12 +100,14 @@
 
     // var testhtml = '{{~if (a > 1 )}} aaa {{~end}}';
     // var testhtml = '{{~if (a > 1 && (b > 0 || c< 0))}} xxx {{~end}}';
-    // var testhtml = '{{~ if(required)}} aaa {{~end}}';
-    var testhtml = '{{~if (a > 1 && (b > 0 || c< 0))}} xxx {{~end}} {{~ if(required)}} aaa {{~end}}';
+    var testhtml = '{{~ if(required)}} aaa {{~end}}';
+    // var testhtml = '{{~for (let x of options)}} xxx {{~end}}';
     var data = {}
 
 
-
+    // var options = {
+    //     debugMode: true
+    // }
     var fasty = new Fasty({
         debugMode: true
     });

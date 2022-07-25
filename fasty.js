@@ -8,7 +8,9 @@ var Fasty = function (options) {
     //safely Access mode
     this.safelyAccess = options && typeof options.safelyAccess !== "undefined" ? options.safelyAccess : true;
 
+    //debug mode
     this.debugMode = options && typeof options.debugMode !== "undefined" ? options.debugMode : false;
+
 
     //the compile funtions cache
     this.funs = {};
@@ -574,11 +576,7 @@ Fasty.prototype = {
         }
 
         // Javascript Object
-        if (["$data", "Object", "Number", "String", "Boolean", "Array", "Math", "Date"].indexOf(key) > -1) {
-            return true;
-        }
-
-        return typeof window !== "undefined" && window[key];
+        return ["$data", "Object", "Number", "String", "Boolean", "Array", "Math", "Date", "window"].indexOf(key) > -1;
     },
 
     _getComparison: function (str, contextVars) {
