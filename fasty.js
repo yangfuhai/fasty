@@ -497,6 +497,7 @@ Fasty.prototype = {
         }
         var token = newToken("", false);
         var inString = false;
+        var inStringStartChar;
         while (!this._isEnd(pos, methodInvoke)) {
             var c = methodInvoke.charAt(pos);
             if (c === '\n' || c === '\t') {
@@ -516,16 +517,18 @@ Fasty.prototype = {
 
 
             //string start
-            if (!inString && c === "\"") {
+            if (!inString && (c === "\"" || c === "'")) {
                 tokens.push(token);
-                token = newToken(c, false);
+                token = newToken(c, false)
+
+                inStringStartChar = c;
                 inString = true;
                 pos++;
                 continue;
             }
 
             //string end
-            if (inString && c === "\"") {
+            if (inString && c === inStringStartChar) {
                 tokens.push(token);
                 token = newToken(c, false);
                 inString = false;
