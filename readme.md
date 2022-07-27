@@ -57,13 +57,21 @@ var result = fasty.render(template,data);
 //output: hello world
 
 
-// #3 escape
+// #3
+{{1+2+3}}
+//output:6
+{{100 / 100}}
+//output:1
+{{10%3 * 100}}
+//output:100
+
+
+// #4 escape
 {{! "<div> hello world </div>"}}
 //output: &lt;div&gt; hello world &lt;/div&gt;
 
 
-
-// #4 unescape
+// #5 unescape
 {{@ "&lt;div&gt; hello world &lt;/div&gt;"}}
 //output: <div> hello world </div>
 ```

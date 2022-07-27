@@ -62,12 +62,21 @@ var result = fasty.render(template,data);
 //输出：hello world
 
 
-// #3 安全输出，对 html 进行 escape
+// #3 计算输出
+{{1+2+3}}
+//输出:6
+{{100 / 100}}
+//输出:1
+{{10 % 3 * 100}}
+//输出:100
+
+
+// #4 安全输出，对 html 进行 escape
 {{! "<div> hello world </div>"}}
 //输出：&lt;div&gt; hello world &lt;/div&gt;
 
 
-// #4 强制转换 html 输出
+// #5 强制转换 html 输出
 {{@ "&lt;div&gt; hello world &lt;/div&gt;"}}
 //输出：<div> hello world </div>
 ```
