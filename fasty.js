@@ -377,7 +377,7 @@ Fasty.prototype = {
             //output
             else if (tok.isOutput()) {
                 if (tok.isEscape()) {
-                    body += 'ret += $data.$escape(' + this._compileObjectOrMethodInvoke(contextVars, tok.text)  + ' ?? "");';
+                    body += 'ret += $data.$escape(' + this._compileObjectOrMethodInvoke(contextVars, tok.text) + ' ?? "");';
                 } else if (tok.isUnEscape()) {
                     body += 'ret += $data.$unescape(' + this._compileObjectOrMethodInvoke(contextVars, tok.text) + ' ?? "");';
                 } else {
@@ -507,7 +507,7 @@ Fasty.prototype = {
 
 
             //opreator
-            if (!inString && ["+", "-", "*", "/", "%", "(", ")", "[", "]", ",", "?", ":", "."].indexOf(c) >= 0) {
+            if (!inString && ["+", "-", "*", "/", "%", "(", ")", "[", "]", ",", "?", ":", ".", "="].indexOf(c) >= 0) {
                 tokens.push(token);
                 tokens.push(newToken(c, true));
                 token = newToken("", false);
