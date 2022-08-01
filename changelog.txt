@@ -1,9 +1,9 @@
 # v1.0.4 2022-08-01
-修复： if 条件里有 &&  || 和括号渲染错误的问题
 新增： 计算输出，例如  {{ 1 + 2}}、{{ 1 * 100 % 3 / 20}}、{{ a == b ? 'a' : 'b'}}
 新增： 新增 options.windowObjectEnable 和 windowObjects 配置，用于可以指定使用哪些 window 对象
 新增： 当输出的数据为 null/undefined 时，默认输出空字符串
 优化： 默认情况下，忽略 window.object 的数据，必须通过 options.windowObjectEnable 配置开启
+修复： if 条件里有 &&  || 和括号渲染错误的问题
 
 
 # v1.0.3 2022-07-22
