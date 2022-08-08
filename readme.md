@@ -256,6 +256,9 @@ var options = {
     //datatype: array, eg: ['$','JQeury']
     windowObjects: null,
     
+    //the render() method root data reference name
+    rootParaName:'$DATA',
+    
     //custom escape method 
     $escape:function (value){return value},
     

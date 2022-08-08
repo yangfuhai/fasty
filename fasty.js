@@ -20,6 +20,8 @@ var Fasty = function (options) {
 
     //the compile funtions cache
     this.funs = {};
+
+    this.rootParaName = options && typeof options.rootParaName === "string" ? options.rootParaName : "$DATA";
 };
 
 Fasty.prototype = {
@@ -53,15 +55,15 @@ Fasty.prototype = {
             return type === 3;
         }
 
-        this.arrange = function () {
+        this.arrange = function (fasty) {
             if (this.isText()) {
                 return;
             }
 
             this.text = this.text.trim();
-            if (this.isOutput() && this.safelyAccess) {
-                this.text = this.text.replace(/\?\./g, "$safe.")
-                    .replace(/\?\(/g, "$safe(")
+            if (this.isOutput() && fasty && fasty.safelyAccess) {
+                this.text = this.text.replace(/\?\./g, "__safe.")
+                    .replace(/\?\(/g, "__safe(")
             }
 
             var sIndexOf = this.text.indexOf(' ');
@@ -117,7 +119,7 @@ Fasty.prototype = {
                 if (this.debugMode) {
                     console.log("method body >>>>", body)
                 }
-                fn = new Function("$data", body);
+                fn = new Function(this.rootParaName, body);
                 this.funs[template] = fn;
             } catch (err) {
                 console.error("template error  >>>", err);
@@ -176,8 +178,8 @@ Fasty.prototype = {
                 }
 
                 //safely access
-                if (attr.endsWith("$safe")) {
-                    attr = attr.substring(0, attr.length - 5);
+                if (attr.endsWith("__safe")) {
+                    attr = attr.substring(0, attr.length - 6);
                     var ret = target[attr];
                     return ret ? that._proxy(ret, true, attr) : that._proxy(() => {
                     }, true, attr);
@@ -214,7 +216,7 @@ Fasty.prototype = {
             if (c === '{' && template.charAt(pos + 1) === '{') {
                 if (tok) {
                     toks.push(tok);
-                    tok.arrange();
+                    tok.arrange(this);
                     tok = null;
                 }
 
@@ -249,7 +251,7 @@ Fasty.prototype = {
 
                 if (tok) {
                     toks.push(tok);
-                    tok.arrange();
+                    tok.arrange(this);
                     tok = null;
                 }
                 continue;
@@ -264,7 +266,7 @@ Fasty.prototype = {
         }
 
         if (tok) {
-            tok.arrange();
+            tok.arrange(this);
             toks.push(tok);
         }
 
@@ -377,11 +379,11 @@ Fasty.prototype = {
             //output
             else if (tok.isOutput()) {
                 if (tok.isEscape()) {
-                    body += 'ret += $data.$escape(' + this._compileObjectOrMethodInvoke(contextVars, tok.text) + ' ?? "");';
+                    body += 'ret += (' + this.rootParaName + '.$escape(' + this._compileObjectOrMethodInvoke(contextVars, tok.text) + ') ?? "");';
                 } else if (tok.isUnEscape()) {
-                    body += 'ret += $data.$unescape(' + this._compileObjectOrMethodInvoke(contextVars, tok.text) + ' ?? "");';
+                    body += 'ret += (' + this.rootParaName + '.$unescape(' + this._compileObjectOrMethodInvoke(contextVars, tok.text) + ') ?? "");';
                 } else {
-                    body += 'ret += ' + this._compileObjectOrMethodInvoke(contextVars, tok.text) + ' ?? "";';
+                    body += 'ret += (' + this._compileObjectOrMethodInvoke(contextVars, tok.text) + ') ?? "";';
                 }
             }
             //js
@@ -415,7 +417,7 @@ Fasty.prototype = {
                         if (cfragments.length === 3) {
                             var cTok = new this.Tok(9);
                             cTok.text = cfragments[0]; //var i=0,len=xxx.length;
-                            cTok.arrange();
+                            cTok.arrange(this);
 
                             body += "for ("
                             //i=0,len=xxx.length
@@ -490,7 +492,7 @@ Fasty.prototype = {
                     if (this.isOperator || isInvoke || that._inContextVars(contextVars, this.value.trim())) {
                         return this.value;
                     } else {
-                        return "$data[\"" + this.value.trim() + "\"]";
+                        return that.rootParaName + "[\"" + this.value.trim() + "\"]";
                     }
                 }
             };
@@ -589,7 +591,11 @@ Fasty.prototype = {
             }
         }
 
-        if (["$data", "Object", "Number", "String", "Boolean", "Array", "Math", "Date", "window"].indexOf(key) > -1) {
+        if (key.endsWith("__safe")) {
+            key = key.substring(0, key.length - 6);
+        }
+
+        if ([this.rootParaName, "Object", "Number", "String", "Boolean", "Array", "Math", "Date", "window"].indexOf(key) > -1) {
             return true;
         }
 

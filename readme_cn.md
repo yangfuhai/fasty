@@ -257,6 +257,9 @@ var options = {
     //例如： ['$','JQeury']
     windowObjects: null,
 
+    //render() 方法传入的数据的引用
+    rootParaName:'$DATA',
+
     //自定义 html 安全输出方法
     //当使用 {{* ... }} 的时候使用该方法转换
     $escape:function (html){return html},
