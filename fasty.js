@@ -217,33 +217,21 @@ Fasty.prototype = {
             }
 
             //string start
-            if (!inString && (c === "\"" || c === "'")) {
+            if (tok && !tok.isText() && !inString && (c === "\"" || c === "'")) {
                 inStringStartChar = c;
                 inString = true;
-
-                if (!tok) {
-                    tok = new this.Tok(0);
-                }
-
                 tok.addTokText(c);
-
                 pos++;
                 continue;
             }
 
             //string end
-            if (inString && c === inStringStartChar) {
+            if (tok && inString && c === inStringStartChar) {
                 inString = false;
-                if (!tok) {
-                    tok = new this.Tok(0);
-                }
-
                 tok.addTokText(c);
                 pos++;
                 continue;
             }
-
-
 
             if (!inString && c === '{' && template.charAt(pos + 1) === '{') {
                 if (tok) {
@@ -460,7 +448,8 @@ Fasty.prototype = {
                             body += cfragments[2] + "){"
                             break;
                         }
-                        break;
+
+                        throw Error("for loop is error: " + tok.text)
                     case "if":
                         contextLevel++;
                         body += "if(" + this._compileComparison(tok, contextVars) + "){";
