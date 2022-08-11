@@ -206,6 +206,8 @@ Fasty.prototype = {
         var toks = [];
         var pos = 0;
         var tok;
+        var inString = false;
+        var inStringStartChar;
         while (!this._isEnd(pos, template)) {
 
             var c = template.charAt(pos);
@@ -213,7 +215,37 @@ Fasty.prototype = {
                 pos++;
                 continue;
             }
-            if (c === '{' && template.charAt(pos + 1) === '{') {
+
+            //string start
+            if (!inString && (c === "\"" || c === "'")) {
+                inStringStartChar = c;
+                inString = true;
+
+                if (!tok) {
+                    tok = new this.Tok(0);
+                }
+
+                tok.addTokText(c);
+
+                pos++;
+                continue;
+            }
+
+            //string end
+            if (inString && c === inStringStartChar) {
+                inString = false;
+                if (!tok) {
+                    tok = new this.Tok(0);
+                }
+
+                tok.addTokText(c);
+                pos++;
+                continue;
+            }
+
+
+
+            if (!inString && c === '{' && template.charAt(pos + 1) === '{') {
                 if (tok) {
                     toks.push(tok);
                     tok.arrange(this);
@@ -246,7 +278,7 @@ Fasty.prototype = {
                 continue;
             }
 
-            if (c === '}' && template.charAt(pos + 1) === '}') {
+            if (!inString && c === '}' && template.charAt(pos + 1) === '}') {
                 pos += 2;
 
                 if (tok) {
