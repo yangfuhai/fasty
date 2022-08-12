@@ -1,6 +1,6 @@
 {
   "name": "fasty",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "author": "Michael <fuhai999@gmail.com>",
   "description": "The fastest javascript templating engine.",
   "license": "MIT",

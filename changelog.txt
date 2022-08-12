@@ -1,3 +1,8 @@
+# v1.0.5 2022-08-02
+新增：options.rootParaName 配置功能，默认为 $DATA
+修复： "{{" 和 "}}" 作为字符串内容会导致编译出错的问题
+
+
 # v1.0.4 2022-08-01
 新增： 计算输出，例如  {{ 1 + 2}}、{{ 1 * 100 % 3 / 20}}、{{ a == b ? 'a' : 'b'}}
 新增： 新增 options.windowObjectEnable 和 windowObjects 配置，用于可以指定使用哪些 window 对象
